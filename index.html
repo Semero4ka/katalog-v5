@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Каталог оптовых цен</title>
+<meta name="description" content="Офлайн-каталог: корзина, заявки, накладные для 1С">
+<meta name="theme-color" content="#0f4c81">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f4f6f8; --card:#fff; --ink:#1c2430; --muted:#6b7684; --line:#e4e9ef;
+  --accent:#0f4c81; --accent2:#0d3f6b; --chip:#e8eef5; --ok:#1c8a4b;
+  --shadow:0 1px 2px rgba(16,35,55,.06),0 4px 14px rgba(16,35,55,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#10151b; --card:#1a2129; --ink:#e8edf2; --muted:#93a0ad;
+    --line:#28323d; --chip:#232f3b; --shadow:0 1px 2px rgba(0,0,0,.4); }
+}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{background:var(--bg); color:var(--ink); font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; -webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+/* header */
+header{position:sticky; top:0; z-index:20; background:linear-gradient(180deg,var(--accent),var(--accent2)); color:#fff; padding:10px 14px; box-shadow:0 2px 10px rgba(10,40,70,.25)}
+.brand{display:flex; align-items:center; gap:9px; margin-bottom:9px}
+.brand img{width:26px;height:26px;border-radius:7px}
+.brand h1{font-size:17px;margin:0;font-weight:650}
+.brand .sub{font-size:11.5px;opacity:.75}
+.topbtns{margin-left:auto; display:flex; gap:8px}
+.tbtn{position:relative; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); color:#fff; border-radius:10px; padding:7px 11px; font-size:13px; cursor:pointer}
+.tbtn .badge{position:absolute; top:-7px; right:-7px; background:#e53935; color:#fff; font-size:11px; min-width:18px; height:18px; line-height:18px; border-radius:9px; padding:0 4px; display:none}
+.tbtn .badge.on{display:block}
+.searchrow{display:flex; gap:8px}
+.searchbox{flex:1; display:flex; align-items:center; gap:8px; background:#fff; border-radius:12px; padding:0 12px; height:44px}
+.searchbox input{flex:1;border:0;outline:0;font-size:16px;background:transparent;color:var(--ink);min-width:0}
+.clearbtn{border:0;background:none;font-size:18px;color:#9aa7b4;cursor:pointer;display:none}
+.searchbox.has .clearbtn{display:block}
+.sortbox select{height:44px;border:0;border-radius:12px;background:#fff;color:var(--ink);font-size:13.5px;padding:0 8px;outline:0;max-width:44vw;-webkit-appearance:none;appearance:none}
+/* chips */
+.chips{display:flex;gap:7px;overflow-x:auto;padding:9px 12px;scrollbar-width:none;background:var(--bg)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 13px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip .cnt{font-size:11px;color:var(--muted)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.active .cnt{color:rgba(255,255,255,.75)}
+/* list */
+.meta{display:flex;justify-content:space-between;align-items:center;padding:2px 14px 8px;font-size:12.5px;color:var(--muted)}
+main{padding:0 12px 60px}
+.group-h{margin:18px 2px 8px;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
+.group-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;box-shadow:var(--shadow);display:flex;align-items:center;gap:11px}
+.thumb{width:52px;height:52px;border-radius:9px;background:var(--chip);flex:none;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:10px;color:var(--muted);text-align:center;word-break:break-all;padding:2px}
+.thumb img{width:100%;height:100%;object-fit:cover;display:none}
+.thumb.has img{display:block}.thumb.has .ph{display:none}
+.card .txt{flex:1;min-width:0}
+.card .name{font-size:14.5px;word-break:break-word}
+.card .cat{font-size:11.5px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .price{flex:none;font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
+.card .price small{font-weight:400;color:var(--muted);font-size:11px}
+.add{flex:none;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:9px 12px;font-size:12.5px;cursor:pointer}
+.card.incart{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
+.addcount{flex:none;display:flex;align-items:center;gap:6px;background:#e7f5ec;border:1px solid var(--ok);border-radius:9px;padding:5px 7px}
+.addcount button{border:0;background:var(--ok);color:#fff;border-radius:7px;width:26px;height:26px;font-size:15px;cursor:pointer}
+.addcount input{width:52px;border:0;background:transparent;text-align:center;font-size:13.5px;color:var(--ink)}
+mark{background:#ffe9a8;border-radius:3px;padding:0 1px}
+@media (prefers-color-scheme: dark){ mark{background:#7a5c14} }
+.empty{text-align:center;color:var(--muted);padding:60px 20px}
+#more{text-align:center;color:var(--muted);font-size:13px;padding:14px}
+footer{padding:6px 16px 30px;color:var(--muted);font-size:11.5px;line-height:1.5}
+/* drawer */
+.drawer{position:fixed;inset:0;z-index:50;display:none}
+.drawer.open{display:block}
+.drawer .bg{position:absolute;inset:0;background:rgba(10,20,30,.5)}
+.panel{position:absolute;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--card);box-shadow:-8px 0 30px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.panel .phead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.panel .phead h2{margin:0;font-size:16px}
+.x{border:0;background:none;font-size:22px;color:var(--muted);cursor:pointer;padding:4px}
+.panel .pbody{flex:1;overflow-y:auto;padding:12px 16px}
+.crow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line)}
+.crow .nm{flex:1;font-size:13.5px;word-break:break-word}
+.crow .q{width:64px;border:1px solid var(--line);border-radius:8px;padding:6px 4px;text-align:center;font-size:13.5px;background:var(--card);color:var(--ink)}
+.crow .sm{flex:none;width:86px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.crow .del{border:0;background:none;color:#c0392b;font-size:17px;cursor:pointer;padding:2px 4px}
+.ctotal{padding:12px 0;font-size:16px;font-weight:700;text-align:right}
+.pform input,.pform textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:14.5px;background:var(--card);color:var(--ink);margin-bottom:9px}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-size:14.5px;cursor:pointer;width:100%;margin-bottom:8px}
+.btn.p{background:var(--accent);color:#fff}
+.btn.s{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+.btn.ok{background:var(--ok);color:#fff}
+/* orders list */
+.orow{border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:9px}
+.orow .ot{font-size:13.5px;font-weight:650}
+.orow .od{font-size:12px;color:var(--muted);margin:3px 0 8px}
+.orow .obtns{display:flex;gap:7px;flex-wrap:wrap}
+.obtn{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:8px;padding:7px 10px;font-size:12.5px;cursor:pointer}
+/* invoice */
+.inv{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;overflow-y:auto}
+.inv.open{display:block}
+.inv .iwrap{max-width:760px;margin:0 auto;padding:14px 14px 40px}
+.ibar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;display:flex;gap:8px;flex-wrap:wrap}
+.ibar .btn{width:auto;flex:1;margin:0;min-width:120px}
+.sheet{background:#fff;color:#111;border:1px solid #ccc;padding:22px 26px;font-family:Arial,sans-serif}
+.sheet h2{font-size:20px;margin:0 0 14px}
+.sheet .fld{margin:6px 0;font-size:14px}
+.sheet .fld input{border:0;border-bottom:1px solid #999;font-size:14px;padding:2px 4px;width:60%}
+.itab{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px}
+.itab th,.itab td{border:1.5px solid #111;padding:5px 7px;vertical-align:middle}
+.itab th{text-align:center;font-size:13px}
+.itab td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.itab td.u{width:34px;text-align:center;font-size:12.5px}
+.itab input{width:100%;border:0;font-size:13.5px;text-align:right;background:transparent}
+.itab .tn{width:26px;text-align:center}
+.itot{text-align:right;font-size:14px;margin-top:10px;font-weight:700}
+.itot .vat{font-weight:400}
+.words{font-weight:700;font-size:14px;margin-top:6px}
+.sigrow{display:flex;justify-content:space-between;margin-top:26px;font-size:14px;gap:20px}
+.sigrow .sig{flex:1}
+.sigrow .line{border-bottom:1px solid #111;height:20px}
+.sigrow .agent{text-align:center;font-size:12.5px;margin-top:3px}
+@media print{
+  body *{visibility:hidden}
+  .inv.open{position:static;overflow:visible;display:block}
+  .inv.open *{visibility:visible}
+  .ibar{display:none !important}
+  .sheet{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="icon-192.png" alt="">
+    <div><h1>Каталог оптовых цен</h1><div class="sub">цены без НДС · с доставкой</div></div>
+    <div class="topbtns">
+      <button class="tbtn" id="btnOrders">📋 Заявки</button>
+      <button class="tbtn" id="btnCart">🛒 Корзина<span class="badge" id="cartBadge"></span></button>
+    </div>
+  </div>
+  <div class="searchrow">
+    <div class="searchbox" id="sbox">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6b7684" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" inputmode="search" placeholder="Поиск: товар, бренд, объём, цена…" autocomplete="off">
+      <button class="clearbtn" id="clear">×</button>
+    </div>
+    <div class="sortbox"><select id="sort">
+      <option value="def">По прайсу</option><option value="name">А→Я</option>
+      <option value="asc">Цена ↑</option><option value="desc">Цена ↓</option>
+    </select></div>
+  </div>
+</header>
+
+<nav class="chips" id="chips"></nav>
+
+<main id="mainView">
+  <div class="meta"><span id="count"></span><button class="clearbtn" id="reset" style="display:none;font-size:13px;color:var(--accent)">сбросить фильтры</button></div>
+  <div id="list"></div>
+  <div id="more" style="display:none">Прокрутите вниз, чтобы показать ещё…</div>
+  <div class="empty" id="empty" style="display:none"><div style="font-size:44px">🔍</div><div>Ничего не найдено.<br>Попробуйте изменить запрос или категорию.</div></div>
+</main>
+<footer id="foot"></footer>
+
+<div class="drawer" id="drawer">
+  <div class="bg" id="drawerBg"></div>
+  <div class="panel">
+    <div class="phead"><h2 id="pTitle">🛒 Корзина</h2><button class="x" id="pClose">×</button></div>
+    <div class="pbody" id="pBody"></div>
+  </div>
+</div>
+
+<div class="inv" id="invView"><div class="iwrap">
+  <div class="ibar">
+    <button class="btn s" id="invBack">← Назад</button>
+    <button class="btn p" id="invPrint">🖨 Печать / PDF</button>
+    <button class="btn s" id="invCsv">⬇ CSV для 1С</button>
+  </div>
+  <div class="sheet" id="sheet">
+    <h2 id="invTitle">Реализация товаров № <span id="invNum"></span> от <span id="invDate"></span></h2>
+    <div class="fld">Поставщик: <input id="invSupplier" style="width:70%"></div>
+    <div class="fld">Покупатель: <input id="invBuyer" style="width:70%"></div>
+    <table class="itab" id="invTable">
+      <thead><tr><th class="tn">№</th><th>Товар</th><th style="width:90px">Количество</th><th style="width:40px">Ед.</th><th style="width:90px">Цена</th><th style="width:110px">Сумма</th></tr></thead>
+      <tbody id="invRows"></tbody>
+    </table>
+    <div class="itot">Итого: <span id="invTotal"></span></div>
+    <div class="itot vat">В том числе НДС: <span>0</span></div>
+    <div style="font-size:12.5px;margin-top:8px" id="invCountLine"></div>
+    <div class="words" id="invWords"></div>
+    <div class="sigrow">
+      <div class="sig">Отпустил <div class="line"></div><div class="agent" id="invAgent"></div></div>
+      <div class="sig">Получил <div class="line"></div><div class="agent"></div></div>
+    </div>
+  </div>
+</div></div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+"use strict";
+const D=window.CATALOG;
+const norm=s=>(s||'').toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ');
+const fmt=n=>n.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+const KEY={cart:'kz_cart',orders:'kz_orders',inv:'kz_inv'};
+
+const ALL=[];D.groups.forEach((g,gi)=>g.items.forEach(it=>ALL.push({n:it[0],p:it[1],img:it[2],g:g.name,gi})));
+const IDX=ALL.map(o=>({o,s:norm(o.n),ps:String(o.p)}));
+
+const $=id=>document.getElementById(id);
+const $q=$('q'),$list=$('list'),$chips=$('chips'),$count=$('count'),$empty=$('empty'),$more=$('more'),
+$sort=$('sort'),$sbox=$('sbox'),$clear=$('clear'),$reset=$('reset'),$foot=$('foot'),
+$drawer=$('drawer'),$pBody=$('pBody'),$pTitle=$('pTitle'),$cartBadge=$('cartBadge');
+let cat=-1,query='',sortBy='def',shown=0,view=[],panelMode='cart',curOrder=null,curInvItems=null;
+
+/* ---------- chips & list ---------- */
+function buildChips(){
+  let h='<button class="chip active" data-c="-1">Все <span class="cnt">'+ALL.length+'</span></button>';
+  D.groups.forEach((g,gi)=>h+='<button class="chip" data-c="'+gi+'">'+esc(g.name)+' <span class="cnt">'+g.items.length+'</span></button>');
+  $chips.innerHTML=h;
+}
+buildChips();
+$chips.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=+b.dataset.c;
+  $chips.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c===b));
+  $reset.style.display=(cat!==-1||query)?'inline':'none';apply(true);});
+$reset.addEventListener('click',()=>{cat=-1;$q.value='';query='';$sbox.classList.remove('has');
+  $chips.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.c==='-1'));
+  $reset.style.display='none';apply(true);});
+let t;$q.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>{query=norm($q.value.trim());
+  $sbox.classList.toggle('has',!!$q.value);$reset.style.display=(cat!==-1||query)?'inline':'none';apply(true);},140);});
+$clear.addEventListener('click',()=>{$q.value='';$q.dispatchEvent(new Event('input'));$q.focus();});
+$sort.addEventListener('change',()=>{sortBy=$sort.value;apply(true);});
+
+function apply(st){
+  let arr;
+  if(!query&&cat===-1)arr=IDX.slice();
+  else{const toks=query?query.split(' '):null;
+    arr=IDX.filter(x=>{if(cat!==-1&&x.o.gi!==cat)return false;if(!toks)return true;
+      for(const tk of toks){const num=tk.replace(/[^\d.,]/g,'');
+        if(x.s.includes(tk)||(num&&x.ps.includes(num.replace(',','.'))))continue;return false;}return true;});}
+  if(sortBy==='name')arr.sort((a,b)=>a.o.n.localeCompare(b.o.n,'ru'));
+  else if(sortBy==='asc')arr.sort((a,b)=>a.o.p-b.o.p||a.o.n.localeCompare(b.o.n,'ru'));
+  else if(sortBy==='desc')arr.sort((a,b)=>b.o.p-a.o.p||a.o.n.localeCompare(b.o.n,'ru'));
+  view=arr.map(x=>x.o);
+  $count.textContent=(query||cat!==-1)?'Найдено: '+view.length+' из '+ALL.length:'Всего позиций: '+ALL.length;
+  $empty.style.display=view.length?'none':'block';$list.innerHTML='';shown=0;renderChunk();
+  if(st)window.scrollTo({top:0});
+}
+function hl(text){if(!query)return esc(text);
+  const toks=query.split(' ').filter(Boolean).sort((a,b)=>b.length-a.length);let out=esc(text),re;
+  for(const tk of toks){if(/^[\d.,]+$/.test(tk))continue;
+    re=new RegExp('('+tk.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');out=out.replace(re,'<mark>$1</mark>');}
+  return out;}
+
+function renderChunk(){
+  const slice=view.slice(shown,shown+80),frag=[];let prevG=shown>0?view[shown-1].g:null;
+  for(const o of slice){
+    if(!query&&sortBy==='def'&&o.g!==prevG)frag.push('<div class="group-h">'+esc(o.g)+'</div>');
+    prevG=o.g;frag.push(cardHTML(o,!(query||sortBy!=='def'||cat!==-1)));}
+  $list.insertAdjacentHTML('beforeend',frag.join(''));shown+=slice.length;
+  $more.style.display=view.length>shown?'block':'none';
+}
+new IntersectionObserver(es=>{if(es[0].isIntersecting&&view.length>shown)renderChunk();},{rootMargin:'400px'}).observe($more);
+
+function cardHTML(o,showCat){
+  const qty=getCart()[key(o).n]!==undefined?getCart()[key(o).n]:0;
+  const inCart=qty>0;
+  return '<div class="card'+(inCart?' incart':'')+'" data-k="'+key(o).k+'">'
+   +'<div class="thumb" data-img="'+o.img+'"><img src="img/'+o.img+'" alt="" loading="lazy"><div class="ph">'+o.img+'</div></div>'
+   +'<div class="txt"><div class="name">'+hl(o.n)+'</div>'+(showCat?'<div class="cat">'+esc(o.g)+'</div>':'')+'</div>'
+   +'<div class="price">'+fmt(o.p)+' <small>₽</small></div>'
+   +(inCart?'<div class="addcount"><button data-act="dec">−</button><input type="number" step="0.001" min="0" value="'+qty+'" data-act="qty"><button data-act="inc">+</button></div>'
+           :'<button class="add" data-act="add">+ В корзину</button>')
+   +'</div>';
+}
+function key(o){const k=o.gi+'|'+o.n;return {k,n:k};}
+function refreshCard(o){const el=$list.querySelector('.card[data-k="'+key(o).k+'"]');if(el){const tmp=document.createElement('div');tmp.innerHTML=cardHTML(o,false);el.replaceWith(tmp.firstElementChild);}}
+
+/* ---------- cart ---------- */
+function getCart(){return ls.get(KEY.cart,{});}
+function setCart(c){ls.set(KEY.cart,c);updateBadge();
+  for(const o of ALL){const el=$list.querySelector('.card[data-k="'+key(o).k+'"]');if(el){const q=c[key(o).n]||0;el.classList.toggle('incart',q>0);
+    const ctl=q>0?'<div class="addcount"><button data-act="dec">−</button><input type="number" step="0.001" min="0" value="'+q+'" data-act="qty"><button data-act="inc">+</button></div>':'<button class="add" data-act="add">+ В корзину</button>';
+    el.querySelector('.add, .addcount').outerHTML=ctl;}}}
+function updateBadge(){const c=getCart();let n=0,tot=0;for(const k in c){n++;const it=findByKey(k);if(it)tot+=it.o.p*c[k];}
+  $cartBadge.textContent=n;$cartBadge.classList.toggle('on',n>0);return {n,tot};}
+function findByKey(k){const [gi,n]=k.split('|');const g=D.groups[+gi];if(!g)return null;const i=g.items.findIndex(x=>x[0]===n);return i<0?null:{o:{n:g.items[i][0],p:g.items[i][1],img:g.items[i][2],g:g.name,gi:+gi}};}
+function changeQty(k,delta,abs){
+  const c=getCart();let q=c[k]||0;
+  q=abs!==undefined?Math.max(0,abs):Math.max(0,q+delta);
+  if(q===0)delete c[k];else c[k]=Math.round(q*1000)/1000;
+  setCart(c);renderPanel();
+}
+$list.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-act]');if(!btn||btn.dataset.act!=='add')return;
+  const card=btn.closest('.card');changeQty(card.dataset.k,+1);
+});
+$list.addEventListener('input',e=>{
+  if(e.target.dataset.act!=='qty')return;const card=e.target.closest('.card');
+  const v=parseFloat(e.target.value.replace(',','.'));
+  changeQty(card.dataset.k,0,isNaN(v)?0:v);
+});
+$list.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-act]');if(!btn||(btn.dataset.act!=='inc'&&btn.dataset.act!=='dec'))return;
+  const card=btn.closest('.card');changeQty(card.dataset.k,btn.dataset.act==='inc'?1:-1);
+});
+
+/* ---------- panel (cart / orders) ---------- */
+function openPanel(mode){panelMode=mode;$drawer.classList.add('open');
+  $pTitle.textContent=mode==='cart'?'🛒 Корзина':'📋 Заявки';renderPanel();}
+$('btnCart').addEventListener('click',()=>openPanel('cart'));
+$('btnOrders').addEventListener('click',()=>openPanel('orders'));
+$('drawerBg').addEventListener('click',closePanel);
+$('pClose').addEventListener('click',closePanel);
+function closePanel(){$drawer.classList.remove('open');}
+
+function cartText(order){
+  let s='Заявка от '+order.date+'\nПокупатель: '+order.buyer+'\nТелефон: '+order.phone+'\n';
+  if(order.comment)s+='Комментарий: '+order.comment+'\n';
+  s+='\nТовар\tКол-во\tЦена\tСумма\n';
+  order.items.forEach((it,i)=>{s+=(i+1)+'. '+it.name+'\t'+fmt(it.qty)+'\t'+fmt(it.price)+'\t'+fmt(it.qty*it.price)+'\n';});
+  s+='\nИтого: '+fmt(order.total)+' ₽\n(без НДС)';
+  return s;
+}
+function renderPanel(){
+  if(panelMode==='cart')renderCart();else renderOrders();
+}
+function renderCart(){
+  const c=getCart(),ks=Object.keys(c);
+  if(!ks.length){$pBody.innerHTML='<div class="empty">Корзина пуста.<br>Добавьте товары из каталога.</div>';return;}
+  let h='',tot=0;
+  ks.forEach(k=>{const f=findByKey(k);if(!f)return;const q=c[k],s=q*f.o.p;tot+=s;
+    h+='<div class="crow"><div class="nm">'+esc(f.o.n)+'</div>'
+      +'<input class="q" type="number" step="0.001" min="0" value="'+q+'" data-k="'+esc(k)+'" data-role="qty">'
+      +'<div class="sm">'+fmt(s)+'</div><button class="del" data-k="'+esc(k)+'" data-role="del">×</button></div>';});
+  h+='<div class="ctotal">Итого: '+fmt(tot)+' ₽ <span style="font-weight:400;font-size:12px;color:var(--muted)">без НДС</span></div>';
+  h+='<button class="btn p" id="checkout">Оформить заявку</button>';
+  $pBody.innerHTML=h;
+  $('checkout').addEventListener('click',checkoutForm);
+  $pBody.querySelectorAll('[data-role="del"]').forEach(b=>b.addEventListener('click',()=>{const cc=getCart();delete cc[b.dataset.k];setCart(cc);renderPanel();}));
+  $pBody.querySelectorAll('[data-role="qty"]').forEach(inp=>inp.addEventListener('change',()=>{
+    const v=parseFloat(inp.value.replace(',','.'));
+    changeQty(inp.dataset.k,0,isNaN(v)?0:v);}));
+}
+function checkoutForm(){
+  const c=getCart();let tot=0;const items=[];
+  for(const k in c){const f=findByKey(k);if(f&&c[k]>0){tot+=f.o.p*c[k];items.push({name:f.o.n,price:f.o.p,qty:c[k]});}}
+  const saved=ls.get(KEY.inv,{supplier:'',buyer:'',agent:''});
+  $pBody.innerHTML='<div class="pform">'
+    +'<label>Покупатель (имя / организация)</label><input id="fBuyer" value="'+esc(saved.buyer)+'" placeholder="ИП Иванов или Магазин «Ромашка»">'
+    +'<label>Телефон</label><input id="fPhone" type="tel" value="'+esc(saved.phone||'')+'" placeholder="+7 …">'
+    +'<label>Комментарий</label><textarea id="fComment" rows="3" placeholder="Пожелания к заказу"></textarea>'
+    +'<div style="font-size:14px;margin:6px 0 10px">Позиций: '+items.length+' · Итого: <b>'+fmt(tot)+' ₽</b> (без НДС)</div>'
+    +'<button class="btn ok" id="fSubmit">Оформить заявку</button>'
+    +'<button class="btn s" id="fBack">← Вернуться в корзину</button></div>';
+  $('fBack').addEventListener('click',renderPanel);
+  $('fSubmit').addEventListener('click',()=>{
+    const buyer=$('fBuyer').value.trim(),phone=$('fPhone').value.trim();
+    if(buyer.replace(/\D/g,'').length<10&&!buyer.match(/[А-Яа-яA-Za-z]{3}/)){$('fBuyer').style.borderColor='red';return;}
+    if(phone.replace(/\D/g,'').length<10){$('fPhone').style.borderColor='red';return;}
+    const inv=ls.get(KEY.inv,{supplier:'',buyer:'',agent:'',num:35156,phone:''});
+    inv.buyer=buyer;inv.phone=phone;ls.set(KEY.inv,inv);
+    const order={id:Date.now(),date:new Date().toLocaleDateString('ru-RU'),buyer,phone,comment:$('fComment').value.trim(),items,total:tot};
+    const orders=ls.get(KEY.orders,[]);orders.unshift(order);ls.set(KEY.orders,orders);
+    setCart({});renderPanel();
+    setTimeout(()=>{openInvoice(order);},250);
+  });
+}
+function renderOrders(){
+  const orders=ls.get(KEY.orders,[]);
+  if(!orders.length){$pBody.innerHTML='<div class="empty">Заявок пока нет.<br>Оформите первую из корзины.</div>';return;}
+  let h='';
+  orders.forEach((o,i)=>{
+    h+='<div class="orow"><div class="ot">Заявка № '+ordersNum(i,orders)+' · '+fmt(o.total)+' ₽</div>'
+      +'<div class="od">'+o.date+' · '+esc(o.buyer)+' · позиций: '+o.items.length+'</div>'
+      +'<div class="obtns"><button class="obtn" data-i="'+i+'" data-role="inv">📄 Накладная</button>'
+      +'<button class="obtn" data-i="'+i+'" data-role="copy">📋 Копировать</button>'
+      +'<button class="obtn" data-i="'+i+'" data-role="del">🗑 Удалить</button></div></div>';
+  });
+  $pBody.innerHTML=h;
+  $pBody.querySelectorAll('.obtn').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i,orders=ls.get(KEY.orders,[]),o=orders[i];if(!o)return;
+    if(b.dataset.role==='inv')openInvoice(o);
+    else if(b.dataset.role==='copy'){navigator.clipboard.writeText(cartText(o)).then(()=>{b.textContent='✓ Скопировано';setTimeout(()=>b.textContent='📋 Копировать',1500);}).catch(()=>{});}
+    else if(b.dataset.role==='del'){orders.splice(i,1);ls.set(KEY.orders,orders);renderPanel();}
+  }));
+}
+function ordersNum(i,orders){const o=orders[i];return o.invNum||String(orders.length-i+35156);}
+
+/* ---------- invoice ---------- */
+function numWords(n){
+  const u=['','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
+  const uf=['','одна','две','три','четыре','пять','шесть','семь','восемь','девять'];
+  const t=['','десять','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+  const te=['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+  const h=['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+  function tri(x,fem){let s='';const H=Math.floor(x/100),T=Math.floor((x%100)/10),U=x%10;
+    if(H)s+=h[H]+' ';if(T===1)s+=te[U]+' ';else{s+=fem?t[U]:(T?t[T]+' ':'');if(U)s+=(fem?uf:u)[U]+' ';}
+    return s;}
+  function forms(x,f1,f2,f5){const m10=x%10,m100=x%100;return (m100>=11&&m100<=14)?f5:(m10===1?f1:(m10>=2&&m10<=4?f2:f5));}
+  let r=Math.floor(n),k=Math.round((n-r)*100);
+  if(k===100){r+=1;k=0;}
+  let s='';
+  const mil=Math.floor(r/1e6),th=Math.floor((r%1e6)/1000),rest=r%1000;
+  if(mil)s+=tri(mil,true)+' '+forms(mil,'миллион','миллиона','миллионов')+' ';
+  if(th)s+=tri(th,true)+' '+forms(th,'тысяча','тысячи','тысяч')+' ';
+  if(rest)s+=tri(rest,false);
+  s=s.trim();if(!s)s='ноль';
+  s=s.charAt(0).toUpperCase()+s.slice(1);
+  return s+' рубл'+forms(r,'ь','я','ей')+' '+String(k).padStart(2,'0')+' копеек';
+}
+function openInvoice(order){
+  const inv=ls.get(KEY.inv,{supplier:'',buyer:'',agent:''});
+  if(order){curOrder=order;curInvItems=order.items.map(it=>({name:it.name,qty:it.qty,unit:'шт',price:it.price}));}
+  else{const o=ls.get(KEY.orders,[]);if(!o.length){openPanel('orders');return;}curOrder=o[0];curInvItems=curOrder.items.map(it=>({name:it.name,qty:it.qty,unit:'шт',price:it.price}));}
+  if(!inv.num)inv.num=35157;
+  $('invNum').textContent=inv.num;
+  $('invDate').textContent=curOrder.date;
+  $('invSupplier').value=inv.supplier||'';
+  $('invBuyer').value=inv.buyer||curOrder.buyer||'';
+  $('invAgent').textContent=inv.agent||'';
+  $('invView').classList.add('open');
+  ls.set(KEY.inv,inv);
+  buildInvRows();
+  $('invBack').onclick=()=>{$('invView').classList.remove('open');openPanel('orders');};
+  $('invPrint').onclick=()=>window.print();
+  $('invCsv').onclick=exportCsv;
+}
+function buildInvRows(){
+  const c=$('invRows');let h='',tot=0;
+  curInvItems.forEach((it,i)=>{
+    const s=it.qty*it.price;tot+=s;
+    h+='<tr><td class="tn">'+(i+1)+'</td><td>'+esc(it.name)+'</td>'
+      +'<td><input type="number" step="0.001" min="0" value="'+it.qty+'" data-i="'+i+'" data-f="qty"></td>'
+      +'<td class="u"><select data-i="'+i+'" data-f="unit"><option'+(it.unit==='шт'?' selected':'')+'>шт</option><option'+(it.unit==='кг'?' selected':'')+'>кг</option></select></td>'
+      +'<td><input type="number" step="0.01" min="0" value="'+it.price+'" data-i="'+i+'" data-f="price"></td>'
+      +'<td class="n" data-role="sum" data-i="'+i+'">'+fmt(s)+'</td></tr>';
+  });
+  c.innerHTML=h;
+  c.querySelectorAll('input,select').forEach(el=>el.addEventListener('change',()=>{
+    const i=+el.dataset.i,f=el.dataset.f;
+    curInvItems[i][f]=el.tagName==='SELECT'?el.value:(parseFloat(el.value.replace(',','.'))||0);
+    buildInvRows();saveInvoiceMeta();
+  }));
+  $('invTotal').textContent=fmt(tot);
+  $('invCountLine').textContent='Всего наименований '+curInvItems.length+', на сумму '+fmt(tot)+' руб.';
+  $('invWords').textContent=numWords(tot);
+}
+function saveInvoiceMeta(){
+  const inv=ls.get(KEY.inv,{});
+  inv.supplier=$('invSupplier').value;inv.buyer=$('invBuyer').value;
+  ls.set(KEY.inv,inv);
+}
+$('invSupplier').addEventListener('change',saveInvoiceMeta);
+$('invBuyer').addEventListener('change',saveInvoiceMeta);
+
+function exportCsv(){
+  saveInvoiceMeta();
+  const inv=ls.get(KEY.inv,{});
+  const invNum=$('invNum').textContent,date=$('invDate').textContent;
+  let tot=0;const lines=[];
+  lines.push(['Номер','Дата','Поставщик','Покупатель','№ строки','Товар','Количество','Единица','Цена','Сумма'].join(';'));
+  curInvItems.forEach((it,i)=>{const s=it.qty*it.price;tot+=s;
+    lines.push([invNum,date,inv.supplier||'',inv.buyer||'',i+1,it.name,String(it.qty).replace('.',','),it.unit,String(it.price).replace('.',','),s.toFixed(2).replace('.',',')].join(';'));});
+  lines.push(['Итого','','','','','','','','',tot.toFixed(2).replace('.',',')].join(';'));
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='Реализация №'+invNum+' от '+date+'.csv';a.click();
+  inv.num=(parseInt(inv.num)||35156)+1;ls.set(KEY.inv,inv);$('invNum').textContent=inv.num;
+}
+$foot.innerHTML=D.note+'. Прайс от '+D.updated+' · '+ALL.length+' позиций. Работает офлайн — установите приложение через меню браузера («Добавить на главный экран»).';
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+apply(true);updateBadge();
+})();
+</script>
+</body>
+</html>
