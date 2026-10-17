@@ -31,7 +31,7 @@
         .btn-add { width: 120px; background: var(--primary); color: var(--white); border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
         .add-to-home { background: #e0e0e0; color: #333; padding: 10px; margin: 10px; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
         .add-to-home button { background: none; border: none; cursor: pointer; font-size: 18px; }
-        .error-msg { text-align: center; color: #777; padding: 40px; font-size: 16px; }
+        .status-msg { text-align: center; color: #777; padding: 40px; font-size: 16px; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: var(--white); padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 2000; }
         .toast.show { opacity: 1; }
         .settings-btn { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
@@ -68,18 +68,18 @@
     </div>
 
     <div class="product-list" id="products-container">
-        <p class="error-msg">Загрузка данных...</p>
+        <p class="status-msg">Загрузка данных...</p>
     </div>
 
     <button class="settings-btn" onclick="openOrderModal()">⚙️</button>
 
     <div class="toast" id="toast">Сохранено!</div>
 
-    <!-- Подключаем данные ПЕРВЫМИ -->
+    <!-- ВАЖНО: data.js должен быть подключен ПЕРЕД основным скриптом -->
     <script src="data.js"></script>
     <script>
         // --- КОНФИГУРАЦИЯ ---
-        const CACHE_VERSION = 'catalog-v9-3'; 
+        const CACHE_VERSION = 'catalog-v10'; 
 
         // --- ДАННЫЕ ---
         let cart = JSON.parse(localStorage.getItem('catalog_cart')) || {};
@@ -87,74 +87,23 @@
         let allProducts = ;
         let uniqueCategories = ;
 
-        // --- УМНЫЙ ЗАГРУЗЧИК ДАННЫХ ---
+        // --- ЗАГРУЗКА ДАННЫХ (ПРОСТАЯ И НАДЕЖНАЯ) ---
         function loadData() {
-            // 1. Пробуем найти известные имена переменных
-            const possibleNames = ['CATALOG', 'data', 'catalogData', 'katalog', 'items', 'products'];
-            let foundData = null;
+            // Мы ожидаем, что в data.js есть переменная с именем CATALOG
+            // Если у вас она называется иначе, измените строку ниже:
+            const rawData = window.CATALOG; 
 
-            for (const name of possibleNames) {
-                if (window[name]) {
-                    foundData = window[name];
-                    console.log(`✅ Данные найдены в переменной: \${name}`);
-                    break;
-                }
-            }
-
-            // 2. Если не нашли по имени, пробуем найти объект с массивами внутри (ваш случай с groups/note)
-            if (!foundData) {
-                for (const key in window) {
-                    const val = window[key];
-                    if (typeof val === 'object' && val !== null) {
-                        // Ищем объект, у которого есть хотя бы одно свойство-массив
-                        const hasArray = Object.values(val).some(v => Array.isArray(v));
-                        if (hasArray) {
-                            foundData = val;
-                            console.log(`✅ Данные найдены как объект: \${key}`);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // 3. Если всё ещё пусто — пробуем скачать файл заново (на случай кэша)
-            if (!foundData) {
-                fetch('data.js')
-                    .then(res => res.text())
-                    .then(text => {
-                        // Очень грубый парсинг: ищем первый большой объект {...}
-                        const match = text.match(/\{[\s\S]*\}/);
-                        if (match) {
-                            try {
-                                // eval опасен, но для локального PWA внутри своего репозитория допустим
-                                // Мы просто выполняем код, чтобы получить объект
-                                const temp = {};
-                                // Создаем функцию, которая вернет найденный объект
-                                // Это хак, чтобы вытащить данные без знания имени переменной
-                                const script = new Function('return (' + match + ')');
-                                foundData = script();
-                                console.log('✅ Данные успешно извлечены из текста файла');
-                            } catch (e) {
-                                console.error('❌ Не удалось распарсить data.js', e);
-                                showError('Не удалось прочитать data.js. Проверьте синтаксис файла.');
-                            }
-                        }
-                    })
-                    .catch(err => {
-                        console.error('❌ Ошибка загрузки data.js', err);
-                        showError('Файл data.js не найден или недоступен.');
-                    });
-            }
-
-            processDataStructure(foundData);
-        }
-
-        function processDataStructure(data) {
-            if (!data) {
-                showError('Каталог пуст — проверьте файл data.js');
+            if (!rawData) {
+                const msg = "❌ ОШИБКА: В файле data.js не найдена переменная 'CATALOG'.\n\nПожалуйста, откройте data.js и убедитесь, что каталог начинается с: \nconst CATALOG = { ... }\nИЛИ: скажите мне имя вашей переменной, я исправлю код.";
+                console.error(msg);
+                document.getElementById('products-container').innerHTML = `<p class="status-msg">\${msg}</p>`;
                 return;
             }
 
+            processDataStructure(rawData);
+        }
+
+        function processDataStructure(data) {
             allProducts = ;
             
             // Сценарий А: Плоский массив товаров [{name, price}, ...]
@@ -187,15 +136,16 @@
                 }
             }
 
+            if (allProducts.length === 0) {
+                document.getElementById('products-container').innerHTML = '<p class="status-msg">В данных нет товаров. Проверьте структуру data.js</p>';
+                return;
+            }
+
             uniqueCategories = [...new Set(allProducts.map(p => p.category))].sort();
             renderCategories();
             renderProducts();
             updateCartCount();
             updateRequestsCount();
-        }
-
-        function showError(msg) {
-            document.getElementById('products-container').innerHTML = `<p class="error-msg">\${msg}</p>`;
         }
 
         function renderCategories() {
@@ -214,7 +164,7 @@
             container.innerHTML = '';
 
             if (filteredProducts.length === 0) {
-                container.innerHTML = '<p class="error-msg">Товары не найдены</p>';
+                container.innerHTML = '<p class="status-msg">Товары не найдены по этому фильтру</p>';
                 return;
             }
 
@@ -359,7 +309,7 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // Запуск после загрузки DOM и скрипта data.js
+        // Запуск
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
         });
