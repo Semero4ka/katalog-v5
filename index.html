@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f4c81">
+<title>Каталог оптовых цен</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:#eef1f5;color:#1c2b3a;padding-bottom:24px}
+header{background:#0f4c81;color:#fff;padding:18px 16px 14px}
+header h1{font-size:26px;margin-bottom:4px}
+header .sub{font-size:14px;opacity:.9;margin-bottom:12px}
+.navbtns{display:flex;gap:10px}
+.navbtns button{flex:1;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:16px;padding:12px 10px;border-radius:10px;cursor:pointer;position:relative}
+.badge{display:inline-block;min-width:24px;background:#ffc233;color:#1c2b3a;font-weight:700;border-radius:12px;padding:1px 7px;font-size:14px;margin-left:4px}
+.toolbar{position:sticky;top:0;z-index:30;background:#eef1f5;padding:10px 12px;display:flex;gap:10px}
+.toolbar select,.toolbar input{flex:1;min-width:0;padding:12px;border:1px solid #c8d2dc;border-radius:10px;font-size:16px;background:#fff}
+#installHint{margin:0 12px 10px;background:#dcebf9;border:1px solid #b7d4ee;border-radius:10px;padding:10px 12px;font-size:14px}
+#browserWarn{margin:0 12px 10px;background:#fff3cd;border:1px solid #ffe08a;border-radius:10px;padding:10px 12px;font-size:14px}
+.card{background:#fff;border-radius:12px;margin:0 12px 10px;padding:10px;display:flex;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.thumb{width:74px;height:74px;flex:0 0 74px;background:#e9edf2;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.ph{font-size:30px}
+.info{flex:1;min-width:0}
+.name{font-weight:600;font-size:15px;line-height:1.25}
+.cat{font-size:12px;color:#8a99a8;letter-spacing:.4px;margin-top:3px;text-transform:uppercase}
+.price{font-size:18px;font-weight:700;color:#0f4c81;margin-top:6px}
+.act{flex:0 0 150px;display:flex;flex-direction:column;gap:8px;justify-content:center}
+.stepper{display:flex;align-items:stretch;border:1.5px solid #0f4c81;border-radius:9px;overflow:hidden}
+.stepper button{width:38px;background:#f0f4f8;border:0;font-size:20px;font-weight:700;color:#0f4c81;cursor:pointer}
+.stepper input{flex:1;width:40px;text-align:center;border:0;font-size:16px;outline:none;-moz-appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+.addbtn{background:#0f4c81;color:#fff;border:0;border-radius:9px;padding:11px 8px;font-size:15px;cursor:pointer}
+.view{padding:12px}
+.vtitle{font-size:22px;margin-bottom:12px}
+.panel{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #edf1f5}
+.row .rname{flex:1;min-width:0;font-size:14px}
+.rtotal{font-weight:700;color:#0f4c81;white-space:nowrap}
+.btn{background:#eef2f6;border:1px solid #c8d2dc;border-radius:9px;padding:10px 12px;font-size:14px;cursor:pointer}
+.btn.primary{background:#0f4c81;color:#fff;border-color:#0f4c81}
+.btn.danger{background:#fdf0ef;border-color:#e6b3ad;color:#a63a2b}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.big{width:100%;padding:14px;font-size:16px;border:0;border-radius:10px;cursor:pointer}
+.ordcard{background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ordhead{font-weight:700;font-size:15px}
+.ordmeta{font-size:13px;color:#5b6b7b;margin:5px 0 9px}
+.tag{display:inline-block;font-size:12px;border-radius:10px;padding:2px 9px;margin-left:6px;vertical-align:1px}
+.tag.new{background:#fff3cd;color:#8a6d00}
+.tag.done{background:#dff3e1;color:#1d6b2c}
+.filters{display:flex;gap:8px;margin-bottom:12px}
+.filters button{flex:1;padding:11px;border-radius:10px;border:1px solid #c8d2dc;background:#fff;font-size:14px;cursor:pointer}
+.filters button.on{background:#0f4c81;color:#fff;border-color:#0f4c81}
+.modal{position:fixed;inset:0;background:rgba(15,30,45,.55);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:640px;border-radius:16px 16px 0 0;padding:16px;max-height:88vh;overflow:auto}
+.sheet h3{margin-bottom:12px}
+.sheet label{display:block;font-size:13px;color:#5b6b7b;margin:10px 0 4px}
+.sheet input,.sheet textarea{width:100%;padding:11px;border:1px solid #c8d2dc;border-radius:9px;font-size:16px}
+.err{color:#a63a2b;font-size:13px;margin-top:4px;display:none}
+.iv-head{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.iv-head label{font-size:12px;color:#5b6b7b;display:flex;flex-direction:column;gap:3px;flex:1;min-width:140px}
+.iv-head input{padding:8px;border:1px solid #c8d2dc;border-radius:8px;font-size:15px}
+#ivTable{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+#ivTable th,#ivTable td{border:1px solid #c8d2dc;padding:6px 7px;text-align:center}
+#ivTable th{background:#f0f4f8}
+#ivTable td:nth-child(2){text-align:left;min-width:160px}
+#ivTable input{width:100%;border:0;font-size:14px;padding:2px;outline:none;background:transparent}
+#ivTable td.num{white-space:nowrap}
+.iv-totals{margin-top:10px;font-size:15px}
+.iv-signs{display:flex;justify-content:space-between;margin-top:26px;font-size:14px;gap:10px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1c2b3a;color:#fff;padding:11px 18px;border-radius:22px;font-size:14px;z-index:99;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.empty{text-align:center;color:#7c8b99;padding:40px 16px}
+@media print{
+  header,.toolbar,#installHint,#browserWarn,#catalog,#cartView,#ordersView,.modal,.toast,#ivActions,.no-print{display:none!important}
+  #invoiceView{display:block!important;padding:0}
+  body{background:#fff}
+  #ivTable input{border:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Каталог оптовых цен</h1>
+  <div class="sub" id="subNote"></div>
+  <div class="navbtns">
+    <button id="btnCart">🛒 Корзина <span class="badge" id="cartBadge" hidden>0</span></button>
+    <button id="btnOrders">📋 Заявки <span class="badge" id="ordersBadge" hidden>0</span></button>
+  </div>
+</header>
+<div class="toolbar">
+  <select id="catSel"><option value="">Все категории</option></select>
+  <input id="search" placeholder="🔍 Поиск товара" autocomplete="off">
+</div>
+<div id="browserWarn" hidden>⚠ Этот браузер может работать некорректно. Скопируйте ссылку и откройте каталог в <b>Chrome</b>.</div>
+<div id="installHint" hidden>📲 Установить приложение на устройство: меню браузера → «Добавить на главный экран».</div>
+<main id="catalog" class="view"></main>
+<div class="empty" id="emptyMsg" hidden>🔍 Ничего не найдено.<br>Попробуйте изменить запрос или категорию.</div>
+<div class="btnrow" style="justify-content:center;padding:0 12px 16px"><button class="btn" id="moreBtn" hidden>Прокрутите вниз, чтобы показать ещё…</button></div>
+
+<section id="cartView" class="view" hidden>
+  <h2 class="vtitle">🛒 Корзина</h2>
+  <div class="panel" id="cartList"></div>
+  <div class="panel" style="margin-top:10px;display:flex;justify-content:space-between;font-size:18px"><b>Итого:</b><b class="rtotal" id="cartTotal">0 ₽</b></div>
+  <div class="btnrow">
+    <button class="btn primary" id="goOrder" style="flex:1">Оформить заказ</button>
+    <button class="btn" id="backCat1">← В каталог</button>
+    <button class="btn danger" id="clearCart">Очистить</button>
+  </div>
+</section>
+
+<section id="ordersView" class="view" hidden>
+  <h2 class="vtitle">📋 Заявки</h2>
+  <div class="filters" id="ordFilters">
+    <button data-f="all" class="on">Все</button>
+    <button data-f="new">Необработанные</button>
+    <button data-f="done">Выполненные</button>
+  </div>
+  <div id="ordersList"></div>
+  <button class="btn" id="backCat2" style="width:100%;margin-top:6px">← В каталог</button>
+  <div class="empty" id="ordersEmpty" hidden>Заявок пока нет. Оформите заказ из корзины — он появится здесь.</div>
+</section>
+
+<section id="invoiceView" class="view" hidden>
+  <div class="btnrow no-print" id="ivActions">
+    <button class="btn primary" id="ivPrint" style="flex:1">🖨 Печать / PDF</button>
+    <button class="btn" id="ivCsv">⬇ CSV для 1С</button>
+    <button class="btn" id="ivCopy">📋 Копировать текст</button>
+    <button class="btn" id="ivSettings">⚙ Подпись и поставщик</button>
+    <button class="btn" id="ivSaveOrder" hidden>💾 Сохранить накладную в заявке</button>
+    <button class="btn" id="ivBack" style="flex:1">← Назад</button>
+  </div>
+  <div class="panel" id="invoicePrintArea">
+    <h2 style="text-align:center;font-size:19px">Реализация товаров</h2>
+    <div class="iv-head">
+      <label>Номер<input id="ivNumber"></label>
+      <label>Дата<input type="date" id="ivDate"></label>
+      <label>Поставщик<input id="ivSupplier"></label>
+      <label>Покупатель<input id="ivBuyer"></label>
+      <label>Отпустил (ФИО под чертой)<input id="ivFio"></label>
+    </div>
+    <table id="ivTable">
+      <thead><tr><th style="width:34px">№</th><th>Товар</th><th style="width:70px">Кол-во</th><th style="width:52px">Ед.</th><th style="width:84px">Цена</th><th style="width:92px">Сумма</th><th class="no-print" style="width:36px"></th></tr></thead>
+      <tbody id="ivBody"></tbody>
+    </table>
+    <div class="btnrow no-print"><button class="btn" id="ivAddRow">＋ Добавить строку</button></div>
+    <div class="iv-totals">
+      <div style="display:flex;justify-content:space-between"><b>Итого:</b><b id="ivTotal">0,00</b></div>
+      <div style="display:flex;justify-content:space-between"><span>В том числе НДС:</span><span id="ivVat">0</span></div>
+      <div id="ivFoot">Всего наименований <span id="ivCount">0</span>, на сумму <span id="ivSum">0</span> руб.</div>
+    </div>
+    <div class="iv-signs">
+      <div>Отпустил ______________ <span id="ivFio2"></span></div>
+      <div>Получил ______________</div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="orderModal" hidden>
+  <div class="sheet">
+    <h3>Оформление заказа</h3>
+    <label>Ваше имя / название организации *</label>
+    <input id="omName">
+    <div class="err" id="errName">Укажите имя или название</div>
+    <label>Телефон *</label>
+    <input id="omPhone" inputmode="tel">
+    <div class="err" id="errPhone">Укажите телефон (не менее 10 цифр)</div>
+    <label>Комментарий (необязательно)</label>
+    <textarea id="omComment" rows="2"></textarea>
+    <div style="margin:12px 0 4px">Сумма заказа: <b id="omSum">0 ₽</b></div>
+    <div class="btnrow">
+      <button class="btn" id="omCancel" style="flex:1">Отмена</button>
+      <button class="btn primary" id="omSave" style="flex:1">Сохранить заявку</button>
+    </div>
+    <p style="font-size:13px;color:#5b6b7b;margin-top:10px">Заявка сохранится в разделе «📋 Заявки» и сразу откроется накладная для печати и выгрузки в 1С.</p>
+  </div>
+</div>
+
+<div class="modal" id="settingsModal" hidden>
+  <div class="sheet">
+    <h3>⚙ Подпись и поставщик</h3>
+    <label>Поставщик (для шапки накладной)</label>
+    <input id="stSupplier">
+    <label>ФИО для строки «Отпустил»</label>
+    <input id="stFio">
+    <label>Следующий номер накладной</label>
+    <input id="stNext" type="number" min="1">
+    <div class="btnrow"><button class="btn primary" id="stSave" style="flex:1">Сохранить</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+'use strict';
+// ---------- безопасное хранилище ----------
+function sGet(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}}
+function sSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
+
+// ---------- данные ----------
+var C=window.CATALOG||{groups:[],note:''};
+document.getElementById('subNote').textContent=C.note||'';
+var groups=(C.groups||[]).map(function(g){
+  return {name:g.name, items:(g.items||[]).map(function(it){
+    var n,p,id;
+    if(Array.isArray(it)){n=String(it[0]||'');p=Number(it[1])||0;id=String(it[2]||'');}
+    else{n=String(it.n||it.name||'');p=Number((it.p!=null?it.p:it.price))||0;id=String(it.id||'');}
+    return {n:n,p:p,id:id};
+  }).filter(function(x){return x.n;})};
+}).filter(function(g){return g.name&&g.items.length;});
+var index={};
+groups.forEach(function(g){g.items.forEach(function(it){if(it.id)index[it.id]=it;});});
+
+// ---------- миграция старых заявок ----------
+function migrate(){
+  if(sGet('kl_migrated',false))return;
+  if(!sGet('kl_orders',null)){
+    var old=sGet('all_orders',null)||sGet('orders',null);
+    if(!old){
+      var arr=[];
+      try{
+        for(var i=0;i<localStorage.length;i++){
+          var k=localStorage.key(i);
+          if(k&&k.indexOf('order_')===0){var o=sGet(k,null);if(o&&o.items&&o.items.length)arr.push(o);}
+        }
+      }catch(e){}
+      if(arr.length)old=arr;
+    }
+    if(old&&old.length)sSet('kl_orders',old);
+  }
+  sSet('kl_migrated',true);
+}
+migrate();
+
+// ---------- состояние ----------
+var cart=sGet('kl_cart',[]);
+if(!Array.isArray(cart))cart=[];
+var orders=sGet('kl_orders',[]);
+if(!Array.isArray(orders))orders=[];
+var draft={};
+var ordFilter='all';
+var curInvoice=null, curOrderId=null;
+var IMG_DIR='img', IMG_EXT='.jpg';
+var PAGE=60, shown=0;
+
+// ---------- утилиты ----------
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n){return (Number(n)||0).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pad(x){return (x<10?'0':'')+x;}
+function fmtDT(iso){var d=new Date(iso);if(isNaN(d.getTime()))return 'дата неизвестна';return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function toast(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},2200);}
+function saveCart(){sSet('kl_cart',cart);updateBadges();}
+function saveOrders(){sSet('kl_orders',orders);updateBadges();}
+function cartQty(){return cart.reduce(function(s,c){return s+c.qty;},0);}
+function cartTotal(){return cart.reduce(function(s,c){var it=index[c.id];return s+(it?it.p*c.qty:0);},0);}
+function updateBadges(){
+  var cb=document.getElementById('cartBadge'),ob=document.getElementById('ordersBadge');
+  cb.textContent=cartQty();cb.hidden=!cartQty();
+  var nw=orders.filter(function(o){return o.status!=='done';}).length;
+  ob.textContent=orders.length;ob.hidden=!orders.length;
+}
+function openView(id){
+  ['catalog','cartView','ordersView','invoiceView'].forEach(function(v){document.getElementById(v).style.display='none';});
+  document.getElementById(id).style.display='block';
+  document.getElementById(id).hidden=false;
+  window.scrollTo(0,0);
+}
+function backToCatalog(){openView('catalog');}
+
+// ---------- каталог ----------
+var catSel=document.getElementById('catSel');
+groups.forEach(function(g){var o=document.createElement('option');o.value=g.name;o.textContent=g.name;catSel.appendChild(o);});
+var searchIn=document.getElementById('search'), searchT=null;
+searchIn.addEventListener('input',function(){clearTimeout(searchT);searchT=setTimeout(function(){renderCatalog(true);},200);});
+catSel.addEventListener('change',function(){renderCatalog(true);});
+function filtered(){var q=searchIn.value.trim().toLowerCase(),cat=catSel.value,out=[];
+  groups.forEach(function(g){if(cat&&g.name!==cat)return;
+    g.items.forEach(function(it){if(q&&it.n.toLowerCase().indexOf(q)<0)return;out.push(it);});});
+  return out;}
+function stepperHTML(id,val){return '<div class="stepper" data-id="'+esc(id)+'">'
+  +'<button type="button" class="minus">−</button>'
+  +'<input type="number" min="1" inputmode="numeric" value="'+(val||1)+'">'
+  +'<button type="button" class="plus">+</button></div>';}
+function wireStepper(root,onChange){
+  root.querySelectorAll('.stepper').forEach(function(st){
+    var input=st.querySelector('input'),id=st.getAttribute('data-id');
+    function clamp(){var v=parseInt(input.value,10);if(isNaN(v)||v<1)v=1;input.value=v;if(onChange)onChange(id,v);}
+    st.querySelector('.minus').addEventListener('click',function(){input.value=(parseInt(input.value,10)||2)-1;clamp();});
+    st.querySelector('.plus').addEventListener('click',function(){input.value=(parseInt(input.value,10)||0)+1;clamp();});
+    input.addEventListener('change',clamp);
+  });
+}
+function renderCatalog(reset){
+  var list=filtered();
+  var cat=document.getElementById('catalog');
+  document.getElementById('emptyMsg').hidden=list.length>0;
+  if(reset){cat.innerHTML='';shown=0;}
+  var slice=list.slice(shown,shown+PAGE);shown+=slice.length;
+  var html='';
+  slice.forEach(function(it){
+    html+='<div class="card">'
+      +'<div class="thumb" data-img="'+esc(it.id)+'"><div class="ph">📦</div></div>'
+      +'<div class="info"><div class="name">'+esc(it.n)+'</div>'
+      +'<div class="cat">'+esc(groups.find(function(g){return g.items.indexOf(it)>=0;}).name)+'</div>'
+      +'<div class="price">'+fmt(it.p)+' ₽</div></div>'
+      +'<div class="act">'+stepperHTML(it.id,draft[it.id]||1)
+      +'<button class="addbtn" data-add="'+esc(it.id)+'">В корзину</button></div></div>';
+  });
+  cat.insertAdjacentHTML('beforeend',html);
+  document.getElementById('moreBtn').hidden=shown>=list.length;
+  cat.querySelectorAll('.card').forEach(function(cardEl){
+    var id=cardEl.querySelector('.thumb').getAttribute('data-img');
+    var it=index[id];
+    var img=document.createElement('img');
+    img.loading='lazy';img.alt='';img.src=IMG_DIR+'/'+id+IMG_EXT;
+    img.addEventListener('error',function(){img.remove();},{once:true});
+    var ph=cardEl.querySelector('.ph');if(ph)ph.replaceWith(img);
+    cardEl.querySelector('.addbtn').addEventListener('click',function(){
+      var v=parseInt(cardEl.querySelector('.stepper input').value,10)||1;
+      draft[id]=v;addToCart(id,v);
+    });
+    wireStepper(cardEl,function(i,v){draft[i]=v;});
+  });
+}
+function addToCart(id,qty){
+  var row=cart.find(function(c){return c.id===id;});
+  if(row)row.qty+=qty;else cart.push({id:id,qty:qty});
+  saveCart();toast('Добавлено в корзину: '+qty+' шт');
+}
+
+// ---------- корзина ----------
+document.getElementById('btnCart').addEventListener('click',function(){renderCart();openView('cartView');});
+document.getElementById('backCat1').addEventListener('click',backToCatalog);
+document.getElementById('clearCart').addEventListener('click',function(){
+  if(!cart.length)return;
+  if(confirm('Очистить корзину?')){cart=[];saveCart();renderCart();}
+});
+document.getElementById('goOrder').addEventListener('click',function(){
+  if(!cart.length){toast('Корзина пуста');return;}
+  document.getElementById('omName').value=sGet('kl_last_name','');
+  document.getElementById('omPhone').value=sGet('kl_last_phone','');
+  document.getElementById('omComment').value='';
+  document.getElementById('omSum').textContent=fmt(cartTotal())+' ₽';
+  document.getElementById('orderModal').hidden=false;
+});
+function renderCart(){
+  var el=document.getElementById('cartList');
+  if(!cart.length){el.innerHTML='<div class="empty">Корзина пуста.<br>Добавьте товары из каталога.</div>';}
+  else{
+    var html='';
+    cart.forEach(function(c){var it=index[c.id];if(!it)return;
+      html+='<div class="row" data-id="'+esc(c.id)+'">'
+        +'<div class="rname">'+esc(it.n)+'</div>'
+        +'<div class="stepper" data-id="'+esc(c.id)+'"><button type="button" class="minus">−</button>'
+        +'<input type="number" min="1" inputmode="numeric" value="'+c.qty+'">'
+        +'<button type="button" class="plus">+</button></div>'
+        +'<div class="rtotal">'+fmt(it.p*c.qty)+' ₽</div>'
+        +'<button class="btn danger" data-del="'+esc(c.id)+'">🗑</button></div>';
+    });
+    el.innerHTML=html;
+    el.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){
+      cart=cart.filter(function(c){return c.id!==b.getAttribute('data-del');});saveCart();renderCart();});});
+    wireStepper(el,function(id,v){
+      var row=cart.find(function(c){return c.id===id;});
+      if(row){row.qty=v;saveCart();}
+      renderCart();
+    });
+  }
+  document.getElementById('cartTotal').textContent=fmt(cartTotal())+' ₽';
+  updateBadges();
+}
+
+// ---------- оформление ----------
+document.getElementById('omCancel').addEventListener('click',function(){document.getElementById('orderModal').hidden=true;});
+document.getElementById('omSave').addEventListener('click',function(){
+  var name=document.getElementById('omName').value.trim();
+  var phoneRaw=document.getElementById('omPhone').value.trim();
+  var digits=phoneRaw.replace(/\D/g,'');
+  var ok=true;
+  document.getElementById('errName').style.display=name?'none':'block';if(!name)ok=false;
+  document.getElementById('errPhone').style.display=digits.length>=10?'none':'block';if(digits.length<10)ok=false;
+  if(!ok)return;
+  sSet('kl_last_name',name);sSet('kl_last_phone',phoneRaw);
+  var maxN=35100;orders.forEach(function(o){if(o.number>maxN)maxN=o.number;});
+  var st=sGet('kl_invset',{supplier:'',fio:'',nextNumber:1});
+  var now=new Date();
+  var order={number:maxN+1,ts:now.getTime(),date:now.toISOString(),status:'new',
+    customer:{name:name,phone:phoneRaw,comment:document.getElementById('omComment').value.trim()},
+    items:cart.map(function(c){var it=index[c.id];return {id:c.id,name:it?it.n:'Товар',price:it?it.p:0,qty:c.qty,unit:'шт'};}),
+    total:cartTotal(),invoice:null};
+  order.invoice={number:String(st.nextNumber||1),date:todayISO(),supplier:st.supplier||'',buyer:name,fio:st.fio||'',
+    rows:order.items.map(function(x){return {name:x.name,qty:x.qty,unit:'шт',price:x.price};})};
+  st.nextNumber=(parseInt(st.nextNumber,10)||1)+1;sSet('kl_invset',st);
+  orders.unshift(order);saveOrders();
+  cart=[];saveCart();
+  document.getElementById('orderModal').hidden=true;
+  toast('Заявка № '+order.number+' сохранена');
+  openInvoice(order.number);
+});
+
+// ---------- заявки ----------
+document.getElementById('btnOrders').addEventListener('click',function(){renderOrders();openView('ordersView');});
+document.getElementById('backCat2').addEventListener('click',backToCatalog);
+document.getElementById('ordFilters').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  ordFilter=b.getAttribute('data-f');
+  document.querySelectorAll('#ordFilters button').forEach(function(x){x.classList.toggle('on',x===b);});
+  renderOrders();
+});
+function renderOrders(){
+  var el=document.getElementById('ordersList');
+  var list=orders.filter(function(o){return ordFilter==='all'||(ordFilter==='done'?o.status==='done':o.status!=='done');});
+  document.getElementById('ordersEmpty').hidden=list.length>0;
+  var html='';
+  list.forEach(function(o){
+    var done=o.status==='done';
+    html+='<div class="ordcard">'
+      +'<div class="ordhead">№ '+esc(o.number)+' · '+esc(fmtDT(o.date))
+      +'<span class="tag '+(done?'done':'new')+'">'+(done?'Выполненная':'Необработанная')+'</span></div>'
+      +'<div class="ordmeta">· '+esc(o.customer&&o.customer.phone||'')+' · позиций: '+o.items.length+' · '+fmt(o.total)+' ₽</div>'
+      +'<div class="btnrow" style="margin-top:2px">'
+      +'<button class="btn" data-inv="'+o.number+'">📄 Накладная</button>'
+      +'<button class="btn" data-done="'+o.number+'">'+(done?'↩ Вернуть в работу':'✔ Выполнена')+'</button>'
+      +'<button class="btn danger" data-del="'+o.number+'">🗑 Удалить</button></div></div>';
+  });
+  el.innerHTML=html;
+  el.querySelectorAll('[data-inv]').forEach(function(b){b.addEventListener('click',function(){openInvoice(parseInt(b.getAttribute('data-inv'),10));});});
+  el.querySelectorAll('[data-done]').forEach(function(b){b.addEventListener('click',function(){
+    var n=parseInt(b.getAttribute('data-done'),10);
+    var o=orders.find(function(x){return x.number===n;});
+    if(o){o.status=o.status==='done'?'new':'done';saveOrders();renderOrders();}});});
+  el.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){
+    var n=parseInt(b.getAttribute('data-del'),10);
+    if(confirm('Удалить заявку № '+n+'?')){
+      orders=orders.filter(function(x){return x.number!==n;});saveOrders();renderOrders();}});});
+  updateBadges();
+}
+
+// ---------- накладная ----------
+function buildInvoiceFromOrder(o){
+  var st=sGet('kl_invset',{supplier:'',fio:'',nextNumber:1});
+  var inv={number:String(st.nextNumber||1),date:(o.date||'').slice(0,10)||todayISO(),
+    supplier:st.supplier||'',buyer:(o.customer&&o.customer.name)||'',fio:st.fio||'',
+    rows:o.items.map(function(x){return {name:x.name,qty:x.qty,unit:x.unit||'шт',price:x.price};})};
+  st.nextNumber=(parseInt(st.nextNumber,10)||1)+1;sSet('kl_invset',st);
+  o.invoice=inv;saveOrders();
+  return inv;
+}
+function openInvoice(orderNum){
+  var o=orders.find(function(x){return x.number===orderNum;});
+  if(!o){toast('Заявка не найдена');return;}
+  curOrderId=orderNum;
+  curInvoice=o.invoice&&o.invoice.rows?o.invoice:buildInvoiceFromOrder(o);
+  renderInvoice();
+  openView('invoiceView');
+}
+function renderInvoice(){
+  var inv=curInvoice;
+  document.getElementById('ivNumber').value=inv.number||'';
+  document.getElementById('ivDate').value=inv.date||'';
+  document.getElementById('ivSupplier').value=inv.supplier||'';
+  document.getElementById('ivBuyer').value=inv.buyer||'';
+  document.getElementById('ivFio').value=inv.fio||'';
+  renderIvRows();
+  document.getElementById('ivSaveOrder').hidden=!curOrderId;
+}
+function renderIvRows(){
+  var inv=curInvoice,html='';
+  inv.rows.forEach(function(r,i){
+    var sum=(Number(r.qty)||0)*(Number(r.price)||0);
+    html+='<tr data-i="'+i+'"><td>'+(i+1)+'</td>'
+      +'<td><input data-f="name" value="'+esc(r.name)+'"></td>'
+      +'<td><input data-f="qty" type="number" min="0" step="any" value="'+r.qty+'"></td>'
+      +'<td><input data-f="unit" value="'+esc(r.unit||'шт')+'"></td>'
+      +'<td><input data-f="price" type="number" min="0" step="any" value="'+r.price+'"></td>'
+      +'<td class="num">'+fmt(sum)+'</td>'
+      +'<td class="no-print"><button class="btn danger" data-rm="'+i+'">×</button></td></tr>';
+  });
+  document.getElementById('ivBody').innerHTML=html;
+  var tot=inv.rows.reduce(function(s,r){return s+(Number(r.qty)||0)*(Number(r.price)||0);},0);
+  document.getElementById('ivTotal').textContent=fmt(tot);
+  document.getElementById('ivVat').textContent='0';
+  document.getElementById('ivCount').textContent=inv.rows.length;
+  document.getElementById('ivSum').textContent=fmt(tot);
+  document.getElementById('ivFio2').textContent=inv.fio||'';
+  document.getElementById('ivBody').querySelectorAll('[data-rm]').forEach(function(b){
+    b.addEventListener('click',function(){curInvoice.rows.splice(parseInt(b.getAttribute('data-rm'),10),1);renderIvRows();});});
+}
+document.getElementById('ivBody').addEventListener('input',function(e){
+  var td=e.target.closest('td');if(!td)return;
+  var tr=td.closest('tr'),i=parseInt(tr.getAttribute('data-i'),10),f=e.target.getAttribute('data-f');
+  if(!curInvoice.rows[i])return;
+  if(f==='qty'||f==='price'){var v=parseFloat(e.target.value);curInvoice.rows[i][f]=isNaN(v)?0:v;}
+  else curInvoice.rows[i][f]=e.target.value;
+  if(f==='qty'||f==='price'){
+    var r=curInvoice.rows[i];
+    tr.children[5].textContent=fmt((Number(r.qty)||0)*(Number(r.price)||0));
+    var tot=curInvoice.rows.reduce(function(s,x){return s+(Number(x.qty)||0)*(Number(x.price)||0);},0);
+    document.getElementById('ivTotal').textContent=fmt(tot);
+    document.getElementById('ivSum').textContent=fmt(tot);
+  }
+  if(f==='fio')document.getElementById('ivFio2').textContent=e.target.value;
+});
+document.getElementById('ivNumber').addEventListener('input',function(){if(curInvoice)curInvoice.number=this.value;});
+document.getElementById('ivDate').addEventListener('change',function(){if(curInvoice)curInvoice.date=this.value;});
+document.getElementById('ivSupplier').addEventListener('input',function(){if(curInvoice)curInvoice.supplier=this.value;});
+document.getElementById('ivBuyer').addEventListener('input',function(){if(curInvoice)curInvoice.buyer=this.value;});
+document.getElementById('ivFio').addEventListener('input',function(){if(curInvoice){curInvoice.fio=this.value;document.getElementById('ivFio2').textContent=this.value;}});
+document.getElementById('ivAddRow').addEventListener('click',function(){
+  if(!curInvoice)return;curInvoice.rows.push({name:'',qty:1,unit:'шт',price:0});renderIvRows();});
+document.getElementById('ivBack').addEventListener('click',function(){
+  if(curOrderId){renderOrders();openView('ordersView');}else backToCatalog();});
+document.getElementById('ivSaveOrder').addEventListener('click',function(){
+  var o=orders.find(function(x){return x.number===curOrderId;});
+  if(o){o.invoice=JSON.parse(JSON.stringify(curInvoice));saveOrders();toast('Накладная сохранена в заявке');}
+});
+document.getElementById('ivPrint').addEventListener('click',function(){window.print();});
+function csvEsc(v){v=String(v==null?'':v);if(v.indexOf(';')>=0||v.indexOf('"')>=0)v='"'+v.replace(/"/g,'""')+'"';return v;}
+function csvNum(n){return (Number(n)||0).toFixed(2).replace('.',',');}
+function download(name,text,mime){
+  try{
+    var blob=new Blob([text],{type:mime||'text/csv;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
+  }catch(e){toast('Не удалось скачать файл');}
+}
+document.getElementById('ivCsv').addEventListener('click',function(){
+  if(!curInvoice)return;
+  var inv=curInvoice,lines=[['Номер','Дата','Поставщик','Покупатель','Товар','Количество','Ед.','Цена','Сумма']];
+  inv.rows.forEach(function(r){lines.push([inv.number,inv.date||'',inv.supplier||'',inv.buyer||'',r.name,csvNum(r.qty).replace(',','.'),r.unit||'шт',csvNum(r.price),(Number(r.qty)||0)*(Number(r.price)||0)]);});
+  var csv='\uFEFF'+lines.map(function(l){return l.map(csvEsc).join(';');}).join('\r\n');
+  download('nalog_1c_'+(inv.number||'')+'.csv',csv);
+});
+function invoiceText(){
+  var inv=curInvoice,tot=0;
+  var t='Реализация товаров'+(inv.number?' № '+inv.number:'')+(inv.date?' от '+inv.date.split('-').reverse().join('.'):'')+'\n';
+  if(inv.supplier)t+='Поставщик: '+inv.supplier+'\n';
+  if(inv.buyer)t+='Покупатель: '+inv.buyer+'\n';
+  t+='---\n';
+  inv.rows.forEach(function(r,i){var sum=(Number(r.qty)||0)*(Number(r.price)||0);tot+=sum;
+    t+=(i+1)+'. '+r.name+' — '+r.qty+' '+(r.unit||'шт')+' x '+fmt(r.price)+' = '+fmt(sum)+'\n';});
+  t+='---\nИтого: '+fmt(tot)+'\n';
+  if(inv.fio)t+='Отпустил: '+inv.fio+'\n';
+  return t;
+}
+document.getElementById('ivCopy').addEventListener('click',function(){
+  if(!curInvoice)return;
+  var t=invoiceText();
+  function fallback(){var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Скопировано');}catch(e){toast('Не удалось скопировать');}ta.remove();}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('Скопировано');},fallback);}
+  else fallback();
+});
+document.getElementById('ivSettings').addEventListener('click',function(){
+  var st=sGet('kl_invset',{supplier:'',fio:'',nextNumber:1});
+  document.getElementById('stSupplier').value=st.supplier||'';
+  document.getElementById('stFio').value=st.fio||'';
+  document.getElementById('stNext').value=st.nextNumber||1;
+  document.getElementById('settingsModal').hidden=false;
+});
+document.getElementById('stSave').addEventListener('click',function(){
+  var st={supplier:document.getElementById('stSupplier').value.trim(),
+    fio:document.getElementById('stFio').value.trim(),
+    nextNumber:Math.max(1,parseInt(document.getElementById('stNext').value,10)||1)};
+  sSet('kl_invset',st);
+  if(curInvoice){curInvoice.supplier=st.supplier;curInvoice.fio=st.fio;
+    document.getElementById('ivSupplier').value=st.supplier;
+    document.getElementById('ivFio').value=st.fio;
+    document.getElementById('ivFio2').textContent=st.fio;}
+  document.getElementById('settingsModal').hidden=false;
+  document.getElementById('settingsModal').hidden=true;
+  toast('Сохранено');
+});
+
+// ---------- баннеры и запуск ----------
+(function(){
+  var ua=navigator.userAgent||'';
+  if(/MiuiBrowser|VKInApp|vkid|com\.vk/i.test(ua))document.getElementById('browserWarn').hidden=false;
+  if(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)document.getElementById('installHint').hidden=true;
+})();
+updateBadges();
+renderCatalog(true);
+openView('catalog');
+})();
+</script>
+</body>
+</html>
