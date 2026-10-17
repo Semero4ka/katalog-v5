@@ -1,7 +1,11 @@
-var CACHE='catalog-v8-1';
+var CACHE='catalog-v8-2';
 var ASSETS=['./','./index.html','./data.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',function(e){
-  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(ASSETS);}).then(function(){return self.skipWaiting();}));
+  e.waitUntil(Promise.all(ASSETS.map(function(u){
+    return caches.open(CACHE).then(function(c){
+      return c.add(new Request(u,{cache:'reload'})).catch(function(){});
+    });
+  })).then(function(){return self.skipWaiting();}));
 });
 self.addEventListener('activate',function(e){
   e.waitUntil(caches.keys().then(function(keys){
@@ -14,16 +18,14 @@ self.addEventListener('fetch',function(e){
   if(url.origin!==location.origin)return;
   e.respondWith(
     caches.match(e.request,{ignoreSearch:true}).then(function(hit){
-      if(hit)return hit;
-      return fetch(e.request).then(function(res){
-        if(res&&res.status===200){
+      var net=fetch(e.request).then(function(res){
+        if(res&&res.status===200&&url.pathname.indexOf('sw')<0){
           var cl=res.clone();
           caches.open(CACHE).then(function(c){c.put(e.request,cl);});
         }
         return res;
-      }).catch(function(){
-        return caches.match('./index.html');
-      });
+      }).catch(function(){return hit||caches.match('./index.html');});
+      return hit||net;
     })
   );
 });
