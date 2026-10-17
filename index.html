@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Каталог оптовых цен</title>
-<meta name="description" content="Офлайн-каталог: поиск, корзина, заявки и накладные для 1С">
+<meta name="description" content="Офлайн-каталог: поиск, корзина, заявки и накладные">
 <meta name="theme-color" content="#0f4c81">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -13,8 +13,7 @@
 :root{
   --bg:#f4f6f8; --card:#ffffff; --ink:#1c2430; --muted:#6b7684;
   --line:#e4e9ef; --accent:#0f4c81; --accent-2:#0d3f6b; --chip:#e8eef5;
-  --shadow:0 1px 2px rgba(16,35,55,.06),0 4px 14px rgba(16,35,55,.05);
-  --ok:#2e7d32;
+  --green:#2e8b57; --shadow:0 1px 2px rgba(16,35,55,.06),0 4px 14px rgba(16,35,55,.05);
 }
 @media (prefers-color-scheme: dark){
   :root{ --bg:#10151b; --card:#1a2129; --ink:#e8edf2; --muted:#93a0ad;
@@ -25,19 +24,26 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);
   font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   -webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+/* ---------- header ---------- */
 header{position:sticky;top:0;z-index:10;
   background:linear-gradient(180deg,var(--accent),var(--accent-2));
   color:#fff;padding:10px 14px;box-shadow:0 2px 10px rgba(10,40,70,.25)}
-.brand{display:flex;align-items:center;gap:9px}
+.brand{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .brand img{width:26px;height:26px;border-radius:7px}
 .brand h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
 .brand .sub{font-size:11.5px;opacity:.75;margin-top:1px}
-.hdrbtns{margin-left:auto;display:flex;gap:7px}
-.hbtn{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
-  color:#fff;border-radius:10px;padding:7px 10px;font-size:12.5px;cursor:pointer;white-space:nowrap}
-.searchrow{display:flex;gap:8px;margin-top:9px}
-.searchbox{flex:1;display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;
-  padding:0 12px;height:44px;box-shadow:0 2px 8px rgba(10,40,70,.18)}
+.hbtns{margin-left:auto;display:flex;gap:7px}
+.hbtn{position:relative;border:0;border-radius:10px;background:rgba(255,255,255,.16);
+  color:#fff;font-size:13px;padding:8px 11px;cursor:pointer;white-space:nowrap}
+.hbtn:active{background:rgba(255,255,255,.3)}
+.hbtn .bdg{position:absolute;top:-6px;right:-6px;background:#e53935;color:#fff;
+  border-radius:10px;min-width:19px;height:19px;font-size:11px;line-height:19px;
+  text-align:center;padding:0 4px;display:none;font-weight:700}
+.hbtn .bdg.on{display:block}
+.searchrow{display:flex;gap:8px}
+.searchbox{flex:1;display:flex;align-items:center;gap:8px;background:#fff;
+  border-radius:12px;padding:0 12px;height:44px;box-shadow:0 2px 8px rgba(10,40,70,.18)}
 .searchbox svg{flex:none;opacity:.45}
 .searchbox input{flex:1;border:0;outline:0;font-size:16px;background:transparent;color:var(--ink);min-width:0}
 .searchbox input::placeholder{color:#9aa7b4}
@@ -46,10 +52,11 @@ header{position:sticky;top:0;z-index:10;
 .sortbox{position:relative;flex:none}
 .sortbox select{height:44px;border:0;border-radius:12px;background:#fff;color:var(--ink);
   font-size:13.5px;padding:0 8px;outline:0;box-shadow:0 2px 8px rgba(10,40,70,.18);
-  max-width:46vw;-webkit-appearance:none;appearance:none;padding-right:20px}
+  max-width:40vw;-webkit-appearance:none;appearance:none;padding-right:20px}
 .sortbox::after{content:"▾";position:absolute;right:7px;top:13px;color:#9aa7b4;pointer-events:none;font-size:12px}
+/* ---------- chips ---------- */
 .chips{display:flex;gap:7px;overflow-x:auto;padding:9px 12px 11px;scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;background:var(--bg);position:sticky;top:0;z-index:9}
+  -webkit-overflow-scrolling:touch;background:var(--bg)}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);
   border-radius:20px;padding:7px 13px;font-size:13px;cursor:pointer;user-select:none;
@@ -57,25 +64,32 @@ header{position:sticky;top:0;z-index:10;
 .chip .cnt{font-size:11px;color:var(--muted)}
 .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .chip.active .cnt{color:rgba(255,255,255,.75)}
+/* ---------- meta / list ---------- */
 .meta{display:flex;justify-content:space-between;align-items:center;padding:2px 14px 8px;
   font-size:12.5px;color:var(--muted)}
 main{padding:0 12px 40px}
 .group-h{margin:18px 2px 8px;font-size:12px;font-weight:700;letter-spacing:.6px;
   text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
 .group-h::after{content:"";flex:1;height:1px;background:var(--line)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;
-  margin-bottom:7px;box-shadow:var(--shadow);display:flex;align-items:center;gap:11px}
-.ph{width:46px;height:46px;border-radius:10px;background:var(--chip);display:flex;align-items:center;
-  justify-content:center;flex:none;font-size:13px;color:var(--muted);overflow:hidden;cursor:pointer}
-.ph.ok{background:var(--card)}
-.ph img{width:100%;height:100%;object-fit:cover}
-.txt{flex:1;min-width:0}
-.name{font-size:14.5px;word-break:break-word}
-.cat{font-size:11.5px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
-.price{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
-.price small{font-weight:400;color:var(--muted);font-size:11px}
-.add{border:0;background:var(--ok);color:#fff;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:9px 12px;margin-bottom:7px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:11px}
+.thumb{flex:none;width:56px;height:56px;border-radius:10px;overflow:hidden;
+  background:var(--chip);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;color:var(--muted);cursor:default}
+.ph .ic{font-size:18px;line-height:1}
+.ph .fn{font-size:6.5px;word-break:break-all;padding:0 3px;text-align:center;line-height:1.2}
+.card .txt{flex:1;min-width:0}
+.card .name{font-size:14.5px;word-break:break-word}
+.card .cat{font-size:11.5px;color:var(--muted);margin-top:3px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.card .right{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.card .price{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
+.card .price small{font-weight:400;color:var(--muted);font-size:11px}
+.add{border:0;background:var(--green);color:#fff;border-radius:9px;padding:7px 12px;
+  font-size:12.5px;cursor:pointer;font-weight:600;white-space:nowrap}
 .add:active{opacity:.8}
 mark{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
 @media (prefers-color-scheme: dark){ mark{background:#7a5c14} }
@@ -83,79 +97,108 @@ mark{background:#ffe9a8;color:inherit;border-radius:3px;padding:0 1px}
 .empty .big{font-size:44px;margin-bottom:10px}
 #more{text-align:center;color:var(--muted);font-size:13px;padding:14px}
 footer{padding:6px 16px 30px;color:var(--muted);font-size:11.5px;line-height:1.5}
-.install{display:none;margin:0 2px 12px;padding:11px 14px;border-radius:12px;background:#eaf2fb;
-  color:var(--accent);font-size:13.5px;cursor:pointer;border:1px dashed #9dbde0;text-align:center}
+.install{display:none;margin:0 12px 12px;padding:11px 14px;border-radius:12px;
+  background:#eaf2fb;color:var(--accent);font-size:13.5px;cursor:pointer;
+  border:1px dashed #9dbde0;text-align:center}
 @media (prefers-color-scheme: dark){ .install{background:#1c2b3a;border-color:#3a5b7d;color:#9cc4ea} }
-.screen{display:none;padding:14px 12px 50px}
-.screen h2{font-size:18px;margin:0 0 12px}
-.btn-primary{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 16px;
-  font-size:14px;cursor:pointer}
-.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:10px;
-  padding:9px 14px;font-size:13px;cursor:pointer}
-.crow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
-  border-radius:12px;padding:10px 12px;margin-bottom:6px}
-.ctxt{flex:1;min-width:0}
-.qty{display:flex;align-items:center;gap:8px;flex:none}
-.qty span{min-width:20px;text-align:center;font-weight:600}
-.qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
-  background:var(--card);font-size:16px;cursor:pointer;color:var(--ink)}
-.csum{flex:none;font-weight:700;font-size:13.5px;min-width:70px;text-align:right}
-.cdel{border:0;background:none;color:#c0392b;font-size:15px;cursor:pointer;flex:none}
-.cart-total{margin:14px 2px;font-size:16px;text-align:right}
-.cart-actions{display:flex;gap:8px;flex-wrap:wrap}
-.ocard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
-.ohead{font-weight:700;font-size:14px}
-.osub{font-size:12.5px;color:var(--muted);margin:3px 0 9px}
-.obtns{display:flex;gap:7px;flex-wrap:wrap}
-.obtns .btn-primary{padding:7px 12px;font-size:12.5px}
-.obtns .btn-ghost{padding:6px 11px;font-size:12.5px}
-.inv-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}
-.inv-fields label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:3px}
-.inv-fields input{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;
-  font:inherit;background:var(--card);color:var(--ink)}
-.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-#invTable{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
-#invTable th,#invTable td{border:1px solid var(--line);padding:4px 6px}
-#invTable th{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-#invTable input,#invTable select{width:100%;border:1px dashed var(--line);border-radius:6px;
-  padding:5px 6px;font:inherit;background:var(--card);color:var(--ink)}
-#invTable .c{text-align:center;white-space:nowrap}
-#invTable td.csum{text-align:right;font-weight:600;white-space:nowrap}
-.idel{border:0;background:none;color:#c0392b;cursor:pointer;font-size:14px}
-.inv-total{text-align:right;font-size:15px;margin:10px 2px}
-.inv-words{font-weight:600;font-size:13px;margin:4px 2px 6px}
-.inv-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.modal{display:none;position:fixed;inset:0;background:rgba(10,20,30,.45);z-index:50;
-  align-items:center;justify-content:center;padding:16px}
-.mbox{background:var(--card);border-radius:14px;padding:16px;width:100%;max-width:420px;
-  box-shadow:0 10px 40px rgba(0,0,0,.35)}
-.mbox h3{margin:0 0 10px;font-size:16px}
-.mbox label{font-size:12px;color:var(--muted);display:block;margin:9px 0 3px}
-.mbox input,.mbox textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;
-  font:inherit;background:var(--bg);color:var(--ink)}
-.mbox textarea{resize:vertical;min-height:60px}
-#ordErr{display:none;color:#c0392b;font-size:12.5px;margin-top:8px}
-.mrow{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ok);color:#fff;
-  padding:9px 18px;border-radius:20px;font-size:13px;display:none;z-index:99}
-#printArea{display:none}
+/* ---------- overlay screens ---------- */
+.ov{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;overflow-y:auto;
+  -webkit-overflow-scrolling:touch}
+.ov.on{display:block}
+.ov-head{position:sticky;top:0;z-index:2;background:linear-gradient(180deg,var(--accent),var(--accent-2));
+  color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 2px 10px rgba(10,40,70,.25)}
+.ov-head h2{margin:0;font-size:17px;flex:1}
+.ov-close{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;
+  padding:8px 13px;font-size:14px;cursor:pointer}
+.ov-body{padding:12px 14px 60px}
+.crow{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:10px 12px;margin-bottom:8px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:10px}
+.crow .nm{flex:1;min-width:0;font-size:13.5px;word-break:break-word}
+.crow .pr{font-weight:700;white-space:nowrap;font-size:14px}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:30px;height:34px;border-radius:9px;border:1px solid var(--line);
+  background:var(--chip);color:var(--ink);font-size:17px;cursor:pointer;flex:none}
+.qty input{width:64px;height:34px;border-radius:9px;border:1px solid var(--line);
+  background:transparent;color:var(--ink);text-align:center;font-size:14px;outline:0}
+.unit{border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--ink);
+  height:34px;font-size:13px;outline:0}
+.del{border:0;background:none;color:#e53935;font-size:17px;cursor:pointer;padding:4px}
+.csum{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;
+  margin:10px 0;display:flex;justify-content:space-between;align-items:center;font-size:16px}
+.csum b{font-size:19px;font-variant-numeric:tabular-nums}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-size:15.5px;
+  font-weight:650;cursor:pointer;margin-bottom:9px}
+.btn.pri{background:var(--accent);color:#fff}
+.btn.grn{background:var(--green);color:#fff}
+.btn.sec{background:var(--chip);color:var(--ink)}
+.btn.warn{background:#fdecea;color:#c62828}
+@media (prefers-color-scheme: dark){ .btn.warn{background:#3a2225;color:#ff8a80} }
+.frow{margin-bottom:11px}
+.frow label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px}
+.frow input,.frow select{width:100%;height:46px;border-radius:11px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink);font-size:16px;padding:0 12px;outline:0}
+.ferr{color:#e53935;font-size:12.5px;margin-top:4px;display:none}
+.orow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+  margin-bottom:8px;box-shadow:var(--shadow)}
+.orow .ot{display:flex;justify-content:space-between;gap:8px;font-size:13.5px}
+.orow .ot b{font-variant-numeric:tabular-nums}
+.orow .ob{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.mbtn{border:0;border-radius:9px;padding:8px 11px;font-size:12.5px;cursor:pointer;background:var(--chip);color:var(--ink)}
+.mbtn.pri{background:var(--accent);color:#fff}
+.mbtn.del{background:var(--chip);color:#c62828}
+/* ---------- invoice ---------- */
+.instr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.instr .fl{grid-column:span 2}
+.instr label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+.instr input{width:100%;height:40px;border-radius:10px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink);font-size:14.5px;padding:0 10px;outline:0}
+.iwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.itbl{border-collapse:collapse;min-width:640px;background:var(--card)}
+.itbl th,.itbl td{border:1px solid var(--ink);padding:5px 7px;font-size:13.5px;vertical-align:middle}
+.itbl th{font-weight:700;text-align:center}
+.itbl td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.itbl td.c{text-align:center}
+.itbl input{width:100%;min-width:52px;border:1px solid transparent;background:transparent;
+  color:var(--ink);font-size:13.5px;text-align:right;outline:0;font-family:inherit;
+  font-variant-numeric:tabular-nums}
+.itbl input:focus{border-color:var(--accent);border-radius:5px;background:var(--chip)}
+.itbl td.txt input{text-align:left;min-width:180px}
+.irow-del{border:0;background:none;color:#e53935;font-size:15px;cursor:pointer}
+.tot{margin-top:10px;font-size:14.5px;text-align:right}
+.tot .big{font-size:17px;font-weight:750}
+.prop{font-weight:700;margin-top:2px}
+.signs{display:flex;gap:26px;margin-top:26px;font-size:14px;flex-wrap:wrap}
+.signs .sg{flex:1;min-width:200px}
+.signs .line{border-bottom:1px solid var(--ink);height:22px;position:relative;text-align:center}
+.signs .line span{position:relative;top:5px;font-size:12.5px;color:var(--muted);background:var(--card);padding:0 6px}
+.inva{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.inva .mbtn{flex:1;min-width:130px;padding:11px;font-size:13px;text-align:center}
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(8,12,18,.92);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  padding:20px;animation:lbIn .18s ease}
+.lb[hidden]{display:none}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+.lb img{max-width:94vw;max-height:76vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.lb .cap{color:#fff;text-align:center;margin-top:12px;font-size:14px;max-width:90vw;
+  text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.lb .x{position:absolute;top:12px;right:14px;width:40px;height:40px;border-radius:50%;
+  border:0;background:rgba(255,255,255,.14);color:#fff;font-size:22px;cursor:pointer;line-height:1}
+.lb .hint{position:absolute;bottom:14px;color:rgba(255,255,255,.55);font-size:11.5px}
+/* ---------- print ---------- */
 @media print{
-  body>*{display:none!important}
-  #printArea{display:block!important;font-family:'Times New Roman',serif;color:#000}
-  .pa{padding:8px;max-width:760px}
-  .ptitle{font-size:17px;font-weight:700;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
-  .pline{margin:4px 0;font-size:13.5px}
-  .ptable{width:100%;border-collapse:collapse;margin:10px 0}
-  .ptable th,.ptable td{border:1px solid #000;padding:5px 8px;font-size:13px;vertical-align:top}
-  .ptable th{text-align:center}
-  .ptable .r{text-align:right;white-space:nowrap}
-  .ptotal{text-align:right;font-size:14px;margin:3px 0}
-  .ptotal span{font-weight:700}
-  .pn{font-size:12px;margin-top:10px}
-  .pb{font-weight:700;font-size:13.5px;margin:4px 0 20px}
-  .psign{display:flex;gap:34px;font-size:13px;margin-top:16px}
-  .ul{display:inline-block;width:150px;border-bottom:1px solid #000;margin:0 6px;position:relative}
-  .exec{position:absolute;left:0;right:0;top:100%;font-size:9px;line-height:1.3;text-align:center}
+  body{background:#fff}
+  header,.chips,.meta,.install,footer,.ov-head,.inva,.ov-body .notprint{display:none!important}
+  .ov{position:static;overflow:visible;display:block!important;background:#fff}
+  .ov-body{padding:0}
+  .itbl{min-width:0;width:100%}
+  .itbl input{border:0;pointer-events:none}
+  .irow-del-col{display:none}
+  .card,.crow,.orow{box-shadow:none;border:1px solid #ddd}
+  main,.chips,.group-h{display:none!important}
+  .ov:not(.on){display:none!important}
 }
 </style>
 </head>
@@ -168,9 +211,9 @@ footer{padding:6px 16px 30px;color:var(--muted);font-size:11.5px;line-height:1.5
       <h1>Каталог оптовых цен</h1>
       <div class="sub">цены без НДС · с доставкой</div>
     </div>
-    <div class="hdrbtns">
-      <button class="hbtn" id="btnOrders">📋 Заявки</button>
-      <button class="hbtn" id="btnCart">🛒 Корзина <span id="cartCount"></span></button>
+    <div class="hbtns">
+      <button class="hbtn" id="btnCart">🛒 Корзина<span class="bdg" id="cartBdg">0</span></button>
+      <button class="hbtn" id="btnOrders">📋 Заявки<span class="bdg" id="ordBdg">0</span></button>
     </div>
   </div>
   <div class="searchrow">
@@ -191,565 +234,662 @@ footer{padding:6px 16px 30px;color:var(--muted);font-size:11.5px;line-height:1.5
 </header>
 
 <nav class="chips" id="chips"></nav>
-
-<main id="view-catalog">
-  <div class="install" id="install">📲 Установить приложение на устройство</div>
-  <div class="meta"><span id="count"></span><button class="clearbtn" id="reset" style="display:inline;font-size:13px;color:var(--accent);background:none;border:0;cursor:pointer">сбросить фильтры</button></div>
+<div class="install" id="install">📲 Установить приложение на устройство</div>
+<main>
+  <div class="meta"><span id="count"></span><button class="clearbtn" id="reset" style="display:none;font-size:13px;color:var(--accent);background:none;border:0;cursor:pointer">сбросить фильтры</button></div>
   <div id="list"></div>
   <div id="more" style="display:none">Прокрутите вниз, чтобы показать ещё…</div>
   <div class="empty" id="empty" style="display:none">
     <div class="big">🔍</div>
     <div>Ничего не найдено.<br>Попробуйте изменить запрос или категорию.</div>
   </div>
-  <footer id="foot"></footer>
 </main>
+<footer id="foot"></footer>
 
-<section class="screen" id="view-cart">
-  <h2>🛒 Корзина</h2>
-  <div id="cartList"></div>
-  <div class="cart-total">Итого: <b id="cartTotal"></b></div>
-  <div class="cart-actions">
-    <button class="btn-primary" id="btnCheckout">Оформить заказ</button>
-    <button class="btn-ghost" id="btnCartBack">← В каталог</button>
-    <button class="btn-ghost" id="btnCartClear">Очистить</button>
+<!-- КОРЗИНА -->
+<div class="ov" id="cartView">
+  <div class="ov-head"><h2>🛒 Корзина</h2><button class="ov-close" data-close>Закрыть</button></div>
+  <div class="ov-body">
+    <div id="cartList"></div>
+    <div class="csum" id="cartSum" style="display:none"><span>Итого:</span><b id="cartTotal">0 ₽</b></div>
+    <button class="btn grn" id="toOrder" style="display:none">Оформить заказ</button>
+    <button class="btn warn" id="cartClear" style="display:none">Очистить корзину</button>
   </div>
-</section>
+</div>
 
-<section class="screen" id="view-orders">
-  <h2>📋 Заявки</h2>
-  <div id="ordersList"></div>
-  <button class="btn-ghost" id="btnOrdersBack" style="margin-top:10px">← В каталог</button>
-</section>
-
-<section class="screen" id="view-invoice">
-  <h2>📄 Накладная «Реализация товаров»</h2>
-  <div class="inv-fields">
-    <div><label>Номер накладной</label><input id="invNum" inputmode="numeric"></div>
-    <div><label>Дата</label><input id="invDate" inputmode="numeric"></div>
-    <div><label>Поставщик</label><input id="invSupplier" placeholder="название организации"></div>
-    <div><label>Покупатель</label><input id="invBuyer" placeholder="имя покупателя"></div>
-    <div style="grid-column:1/-1"><label>Отпустил (ФИО под чертой)</label><input id="invExec"></div>
-  </div>
-  <div class="tscroll">
-    <table id="invTable">
-      <thead><tr><th>№</th><th>Товар</th><th>Количество</th><th>Ед.</th><th>Цена</th><th>Сумма</th><th></th></tr></thead>
-      <tbody id="invBody"></tbody>
-    </table>
-  </div>
-  <button class="btn-ghost" id="btnInvAddRow" style="margin-top:8px">＋ Добавить строку</button>
-  <div class="inv-total">Итого: <b id="invTotal"></b></div>
-  <div class="inv-words" id="invWords"></div>
-  <div class="inv-actions">
-    <button class="btn-primary" id="btnPrint">🖨 Печать / PDF</button>
-    <button class="btn-primary" id="btnCsv">⬇ CSV для 1С</button>
-    <button class="btn-primary" id="btnInvCopy">📋 Скопировать</button>
-    <button class="btn-ghost" id="btnInvBack">← Назад</button>
-  </div>
-</section>
-
-<div class="modal" id="modal-order">
-  <div class="mbox">
-    <h3>Оформление заказа</h3>
-    <label>Имя покупателя</label>
-    <input id="ordName" placeholder="Натали / название точки">
-    <label>Телефон</label>
-    <input id="ordPhone" inputmode="tel" placeholder="+7 900 000-00-00">
-    <label>Комментарий (необязательно)</label>
-    <textarea id="ordComment" placeholder="Доставка, пожелания…"></textarea>
-    <div id="ordErr"></div>
-    <div class="mrow">
-      <button class="btn-ghost" id="btnOrderCancel">Отмена</button>
-      <button class="btn-primary" id="btnOrderOk">Оформить</button>
+<!-- ФОРМА ЗАКАЗА -->
+<div class="ov" id="orderView">
+  <div class="ov-head"><h2>Оформление заказа</h2><button class="ov-close" data-close>Закрыть</button></div>
+  <div class="ov-body">
+    <div class="frow"><label>Ваше имя / название организации *</label>
+      <input id="ordName" type="text" autocomplete="name" placeholder="Например: Магазин «Ромашка»">
+      <div class="ferr" id="errName">Укажите имя или название</div></div>
+    <div class="frow"><label>Телефон *</label>
+      <input id="ordPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 ___ ___-__-__">
+      <div class="ferr" id="errPhone">Укажите телефон (не менее 10 цифр)</div></div>
+    <div class="frow"><label>Комментарий (необязательно)</label>
+      <input id="ordNote" type="text" placeholder="Например: привезти до 12:00"></div>
+    <div class="csum"><span>Сумма заказа:</span><b id="orderTotal">0 ₽</b></div>
+    <button class="btn grn" id="sendOrder">Сохранить заявку</button>
+    <div class="instr notprint" style="margin-top:14px">
+      <div class="fl" style="font-size:12.5px;color:var(--muted)">Заявка сохранится в разделе «📋 Заявки» и сразу откроется накладная для печати и выгрузки в 1С.</div>
     </div>
   </div>
 </div>
 
-<div id="toast"></div>
-<div id="printArea"></div>
+<!-- ЗАЯВКИ -->
+<div class="ov" id="ordersView">
+  <div class="ov-head"><h2>📋 Заявки</h2><button class="ov-close" data-close>Закрыть</button></div>
+  <div class="ov-body" id="ordersList"></div>
+</div>
+
+<!-- НАКЛАДНАЯ -->
+<div class="ov" id="invoiceView">
+  <div class="ov-head"><h2>📄 Накладная</h2><button class="ov-close" data-close>Закрыть</button></div>
+  <div class="ov-body">
+    <div class="invoice-sheet" id="invSheet">
+      <div class="instr">
+        <div><label>Номер</label><input id="invNum" type="text"></div>
+        <div><label>Дата</label><input id="invDate" type="text"></div>
+        <div class="fl"><label>Поставщик</label><input id="invSup" type="text"></div>
+        <div class="fl"><label>Покупатель</label><input id="invBuy" type="text"></div>
+      </div>
+      <div style="font-size:16px;font-weight:750;margin:4px 0 10px" id="invTitle">Реализация товаров</div>
+      <div class="iwrap"><table class="itbl" id="invTbl">
+        <thead><tr><th>№</th><th>Товар</th><th>Количество</th><th>Ед.</th><th>Цена</th><th>Сумма</th><th class="irow-del-col"></th></tr></thead>
+        <tbody id="invBody"></tbody>
+      </table></div>
+      <div class="tot">Итого: <span class="big" id="invTotal">0,00</span><br>В том числе НДС: <span id="invVat">0</span></div>
+      <div style="margin-top:10px;font-size:12.5px;color:var(--muted)" id="invCount">Всего наименований 0, на сумму 0 руб.</div>
+      <div class="prop" id="invProp"></div>
+      <div class="signs">
+        <div class="sg">Отпустил<div class="line"><span id="invSig"></span></div></div>
+        <div class="sg">Получил<div class="line"><span>&nbsp;</span></div></div>
+      </div>
+    </div>
+    <div class="inva notprint">
+      <button class="mbtn pri" id="invPrint">🖨 Печать / PDF</button>
+      <button class="mbtn" id="invCsv">⬇ CSV для 1С</button>
+      <button class="mbtn" id="invCopy">📋 Копировать текст</button>
+      <button class="mbtn" id="invSetup">⚙ Подпись и поставщик</button>
+    </div>
+  </div>
+</div>
+
+<!-- НАСТРОЙКИ НАКЛАДНОЙ -->
+<div class="ov" id="setupView">
+  <div class="ov-head"><h2>⚙ Подпись и поставщик</h2><button class="ov-close" data-close>Закрыть</button></div>
+  <div class="ov-body">
+    <div class="frow"><label>Поставщик (для шапки накладной)</label><input id="setSup" type="text"></div>
+    <div class="frow"><label>ФИО для строки «Отпустил»</label><input id="setSig" type="text"></div>
+    <div class="frow"><label>Следующий номер накладной</label><input id="setNum" type="number"></div>
+    <button class="btn pri" id="setSave">Сохранить</button>
+  </div>
+</div>
+
+<!-- ЛАЙТБОКС ФОТО -->
+<div class="lb" id="lightbox" hidden>
+  <button class="x" id="lbX" aria-label="Закрыть">×</button>
+  <img id="lbImg" alt="Фото товара">
+  <div class="cap" id="lbCap"></div>
+  <div class="hint">Нажмите × или коснитесь экрана, чтобы закрыть</div>
+</div>
 
 <script src="data.js"></script>
 <script>
 (function(){
 "use strict";
 var D = window.CATALOG;
-function norm(s){ return (s||'').toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' '); }
-function fmt(n){ return n.toLocaleString('ru-RU',{minimumFractionDigits:2, maximumFractionDigits:2}); }
-function esc(s){ return (s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
-function qtyStr(n){ return String(Math.round(n*1000)/1000).replace('.',','); }
-function parseNum(v){ v=String(v).replace(/\s/g,'').replace(',','.'); var f=parseFloat(v); return isNaN(f)?0:f; }
-function todayStr(){ var d=new Date(), m=d.getMonth()+1, day=d.getDate(); return (day<10?'0':'')+day+'.'+(m<10?'0':'')+m+'.'+d.getFullYear(); }
+function norm(s){return (s||'').toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ');}
+function fmt(n){return n.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmt3(n){return n.toLocaleString('ru-RU',{minimumFractionDigits:3,maximumFractionDigits:3});}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
-var ALL=[], BYID={};
+/* ---------- данные ---------- */
+var ALL=[];
 D.groups.forEach(function(g,gi){
-  g.items.forEach(function(it){
-    var o={id:it.id, n:it.n, p:it.p, g:g.name, gi:gi};
-    ALL.push(o); BYID[o.id]=o;
+  g.items.forEach(function(it,i){
+    ALL.push({n:it[0], p:it[1], ph:it[2], g:g.name, gi:gi, id:gi+'_'+i});
   });
 });
+var IDX = ALL.map(function(o){return {o:o, s:norm(o.n), ps:String(o.p).replace('.',',')};});
+var BYID = {};
+ALL.forEach(function(o){BYID[o.id]=o;});
 
-function load(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return (v===null||v===undefined)?d:v; }catch(e){ return d; } }
-function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
-var cart=load('kcart6',{});
-var orders=load('korders',[]);
-var prefs=load('kprefs',{supplier:'',buyer:'',phone:'',exec:'Межлумян Л.Г.',invNum:35157});
-function savePrefs(){ save('kprefs',prefs); }
+var cart = load('kb_cart',{});           // id -> {q, u}
+var orders = load('kb_orders',[]);       // список заявок
+var invNum = load('kb_inv_num',35157);
+var invSup = load('kb_inv_sup','поставщик');
+var invSig = load('kb_inv_sig','Межлумян Л.Г.');
+var lastBuyer = load('kb_buyer','');
 
-function cartCount(){ var n=0,k; for(k in cart) n+=cart[k]; return n; }
-function cartTotal(){ var s=0,k; for(k in cart){ var o=BYID[k]; if(o) s+=o.p*cart[k]; } return s; }
-function updateBadge(){ document.getElementById('cartCount').textContent = cartCount()?('('+cartCount()+')'):''; }
-function addToCart(id){ cart[id]=(cart[id]||0)+1; save('kcart6',cart); updateBadge(); toast('Добавлено в корзину'); }
-
-function toast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg; t.style.display='block';
-  clearTimeout(t._h); t._h=setTimeout(function(){ t.style.display='none'; },1600);
-}
-
-// ---------- экраны ----------
-function show(name){
-  ['catalog','cart','orders','invoice'].forEach(function(v){
-    document.getElementById('view-'+v).style.display = (v===name)?'block':'none';
-  });
-  document.getElementById('chips').style.display = (name==='catalog')?'flex':'none';
-  window.scrollTo(0,0);
-}
-
-// ---------- каталог ----------
+/* ---------- элементы ---------- */
 var $q=document.getElementById('q'), $list=document.getElementById('list'),
     $chips=document.getElementById('chips'), $count=document.getElementById('count'),
     $empty=document.getElementById('empty'), $more=document.getElementById('more'),
     $sort=document.getElementById('sort'), $sbox=document.getElementById('sbox'),
     $clear=document.getElementById('clear'), $reset=document.getElementById('reset'),
-    $foot=document.getElementById('foot'), $install=document.getElementById('install');
+    $foot=document.getElementById('foot'), $install=document.getElementById('install'),
+    $cartBdg=document.getElementById('cartBdg'), $ordBdg=document.getElementById('ordBdg');
 
-var cat=-1, query='', sortBy='def';
-var PAGE=80, shown=0, view=[];
+var cat=-1, query='', sortBy='def', PAGE=80, shown=0, view=[];
 
+/* ---------- чипсы ---------- */
 function buildChips(){
-  var html='<button class="chip active" data-c="-1">Все <span class="cnt">'+ALL.length+'</span></button>';
+  var h='<button class="chip active" data-c="-1">Все <span class="cnt">'+ALL.length+'</span></button>';
   D.groups.forEach(function(g,gi){
-    html+='<button class="chip" data-c="'+gi+'">'+esc(g.name)+' <span class="cnt">'+g.items.length+'</span></button>';
+    h+='<button class="chip" data-c="'+gi+'">'+esc(g.name)+' <span class="cnt">'+g.items.length+'</span></button>';
   });
-  $chips.innerHTML=html;
+  $chips.innerHTML=h;
 }
 buildChips();
-$chips.addEventListener('click', function(e){
+$chips.addEventListener('click',function(e){
   var b=e.target.closest('.chip'); if(!b) return;
-  cat=+b.getAttribute('data-c');
-  var cs=$chips.querySelectorAll('.chip');
-  for(var i=0;i<cs.length;i++) cs[i].classList.toggle('active', cs[i]===b);
+  cat=+b.dataset.c;
+  $chips.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('active',c===b);});
   $reset.style.display=(cat!==-1||query)?'inline':'none';
   apply(true);
 });
-$reset.addEventListener('click', function(){
-  cat=-1; $q.value=''; query='';
-  $sbox.classList.remove('has');
-  var cs=$chips.querySelectorAll('.chip');
-  for(var i=0;i<cs.length;i++) cs[i].classList.toggle('active', cs[i].getAttribute('data-c')==='-1');
-  $reset.style.display='none';
-  apply(true);
+$reset.addEventListener('click',function(){
+  cat=-1;$q.value='';query='';$sbox.classList.remove('has');
+  $chips.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('active',c.dataset.c==='-1');});
+  $reset.style.display='none';apply(true);
 });
 var t;
-$q.addEventListener('input', function(){
+$q.addEventListener('input',function(){
   clearTimeout(t);
   t=setTimeout(function(){
     query=norm($q.value.trim());
-    $sbox.classList.toggle('has', !!$q.value);
+    $sbox.classList.toggle('has',!!$q.value);
     $reset.style.display=(cat!==-1||query)?'inline':'none';
     apply(true);
   },140);
 });
-$clear.addEventListener('click', function(){ $q.value=''; $q.dispatchEvent(new Event('input')); $q.focus(); });
-$sort.addEventListener('change', function(){ sortBy=$sort.value; apply(true); });
+$clear.addEventListener('click',function(){$q.value='';$q.dispatchEvent(new Event('input'));$q.focus();});
+$sort.addEventListener('change',function(){sortBy=$sort.value;apply(true);});
 
-function apply(scrollTop){
+/* ---------- список ---------- */
+function apply(st){
   var arr;
-  if(!query && cat===-1){ arr=ALL.slice(); }
+  if(!query&&cat===-1){arr=IDX.slice();}
   else{
     var toks=query?query.split(' '):null;
-    arr=ALL.filter(function(o){
-      if(cat!==-1 && o.gi!==cat) return false;
-      if(!toks) return true;
-      var s=norm(o.n), ps=String(o.p);
+    arr=IDX.filter(function(x){
+      if(cat!==-1&&x.o.gi!==cat)return false;
+      if(!toks)return true;
       for(var i=0;i<toks.length;i++){
-        var tk=toks[i], dn=tk.replace(/[^\d.,]/g,'');
-        if(s.includes(tk) || (dn && ps.includes(dn.replace(',','.')))) continue;
+        var tk=toks[i];
+        var nums=tk.replace(/[^\d.,]/g,'');
+        if(x.s.includes(tk)||(nums&&x.ps.includes(nums.replace(',','.'))))continue;
         return false;
       }
       return true;
     });
   }
-  if(sortBy==='name') arr.sort(function(a,b){ return a.n.localeCompare(b.n,'ru'); });
-  else if(sortBy==='asc') arr.sort(function(a,b){ return a.p-b.p || a.n.localeCompare(b.n,'ru'); });
-  else if(sortBy==='desc') arr.sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n,'ru'); });
-  view=arr;
+  if(sortBy==='name')arr.sort(function(a,b){return a.o.n.localeCompare(b.o.n,'ru');});
+  else if(sortBy==='asc')arr.sort(function(a,b){return a.o.p-b.o.p||a.o.n.localeCompare(b.o.n,'ru');});
+  else if(sortBy==='desc')arr.sort(function(a,b){return b.o.p-a.o.p||a.o.n.localeCompare(b.o.n,'ru');});
+  view=arr.map(function(x){return x.o;});
   $count.textContent=(query||cat!==-1)?('Найдено: '+view.length+' из '+ALL.length):('Всего позиций: '+ALL.length);
-  $more.style.display=view.length>shown?'block':'none';
   $empty.style.display=view.length?'none':'block';
-  $list.innerHTML=''; shown=0; renderChunk();
-  if(scrollTop) window.scrollTo(0,0);
+  $list.innerHTML='';shown=0;renderChunk();
+  if(st)window.scrollTo({top:0});
 }
-
 function hl(text){
-  if(!query) return esc(text);
-  var toks=query.split(' ').filter(Boolean).sort(function(a,b){ return b.length-a.length; });
+  if(!query)return esc(text);
+  var toks=query.split(' ').filter(Boolean).sort(function(a,b){return b.length-a.length;});
   var out=esc(text);
-  for(var i=0;i<toks.length;i++){
-    var tk=toks[i];
-    if(/^[\d.,]+$/.test(tk)) continue;
-    var re=new RegExp('('+tk.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
-    out=out.replace(re,'<mark>$1</mark>');
-  }
+  toks.forEach(function(tk){
+    if(/^[\d.,]+$/.test(tk))return;
+    out=out.replace(new RegExp('('+tk.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');
+  });
   return out;
 }
-
-function card(o, showCat){
-  return '<div class="card">'
-    +'<div class="ph" data-pid="'+o.id+'" title="'+esc(o.id+'.jpg')+'">📷</div>'
+function thumbHtml(o){
+  var candidates='img/'+o.ph+'.jpg';
+  var title='Посмотреть фото: '+esc(o.n);
+  return '<div class="thumb" data-act="photo" data-id="'+o.id+'" title="'+title+'" data-ph="'+o.ph+'">'
+    +'<img loading="lazy" src="'+candidates+'" alt="'+esc(o.n)+'" data-act="photo" data-id="'+o.id+'"></div>';
+}
+function card(o,showCat){
+  return '<div class="card">'+thumbHtml(o)
     +'<div class="txt"><div class="name">'+hl(o.n)+'</div>'
     +(showCat?'<div class="cat">'+esc(o.g)+'</div>':'')
-    +'</div>'
-    +'<div class="right"><div class="price">'+fmt(o.p)+' <small>₽</small></div>'
-    +'<button class="add" data-add="'+o.id+'">+ В корзину</button></div>'
-    +'</div>';
+    +'</div><div class="right"><div class="price">'+fmt(o.p)+' <small>₽</small></div>'
+    +'<button class="add" data-act="add" data-id="'+o.id+'">+ В корзину</button></div></div>';
 }
-
 function renderChunk(){
-  var slice=view.slice(shown, shown+PAGE);
-  var frag=[], prevG=shown>0?view[shown-1].g:null;
-  for(var i=0;i<slice.length;i++){
-    var o=slice[i];
-    if(!query && sortBy==='def' && o.g!==prevG) frag.push('<div class="group-h">'+esc(o.g)+'</div>');
+  var slice=view.slice(shown,shown+PAGE), frag=[], prevG=shown>0?view[shown-1].g:null;
+  slice.forEach(function(o){
+    if(!query&&sortBy==='def'&&o.g!==prevG)frag.push('<div class="group-h">'+esc(o.g)+'</div>');
     prevG=o.g;
-    frag.push(card(o, !(query||sortBy!=='def'||cat!==-1)));
-  }
-  $list.insertAdjacentHTML('beforeend', frag.join(''));
+    frag.push(card(o,!(query||sortBy!=='def'||cat!==-1)));
+  });
+  $list.insertAdjacentHTML('beforeend',frag.join(''));
   shown+=slice.length;
   $more.style.display=view.length>shown?'block':'none';
-  processPhotos();
 }
 new IntersectionObserver(function(es){
-  if(es[0].isIntersecting && view.length>shown) renderChunk();
+  if(es[0].isIntersecting&&view.length>shown)renderChunk();
 },{rootMargin:'400px'}).observe($more);
 
-$list.addEventListener('click', function(e){
-  var b=e.target.closest('[data-add]');
-  if(b){ addToCart(b.getAttribute('data-add')); }
+/* клики по списку (делегирование — безопасно для названий с кавычками) */
+document.getElementById('list').addEventListener('click',function(e){
+  var el=e.target.closest('[data-act]'); if(!el)return;
+  var act=el.dataset.act, o=BYID[el.dataset.id];
+  if(!o)return;
+  if(act==='add'){addToCart(o.id,1,'шт');}
+  else if(act==='photo'){openLightbox(o.ph,o.n);}
 });
 
-// ---------- фото ----------
-var EXTS=['jpg','JPG','jpeg','JPEG','png','PNG','webp','WEBP'];
-function processPhotos(){
-  var els=document.querySelectorAll('.ph:not(.done)');
-  for(var i=0;i<els.length;i++){ els[i].classList.add('done'); loadPh(els[i]); }
+/* заглушка при отсутствии фото */
+function photoFallback(img){
+  var thumb=img.parentElement, fn=thumb.dataset.ph||'';
+  img.onerror=null;
+  img.replaceWith(Object.assign(document.createElement('div'),{
+    className:'ph',
+    innerHTML:'<span class="ic">📷</span><span class="fn">'+esc(fn)+'.jpg</span>'
+  }));
 }
-function loadPh(el){
-  var id=el.getAttribute('data-pid'), k=0;
-  var img=new Image(); img.alt='';
-  img.onload=function(){ el.textContent=''; el.appendChild(img); el.classList.add('ok'); };
-  img.onerror=function(){
-    k++;
-    if(k<EXTS.length){ img.src='img/'+id+'.'+EXTS[k]; }
-    else{ el.textContent='📷'; el.title=id+'.jpg'; }
-  };
-  img.src='img/'+id+'.'+EXTS[0];
-}
+window.__pf=photoFallback;
+$list.addEventListener('error',function(e){
+  var tg=e.target;
+  if(tg.tagName==='IMG'&&tg.parentElement&&tg.parentElement.classList.contains('thumb'))photoFallback(tg);
+},true);
 
-// ---------- корзина ----------
+/* ---------- лайтбокс ---------- */
+var lb=document.getElementById('lightbox'), lbImg=document.getElementById('lbImg'), lbCap=document.getElementById('lbCap');
+var LB_EXT=['.jpg','.jpeg','.JPG','.JPEG','.png','.PNG','.webp','.WEBP'];
+function tryLoad(list,i,o){
+  if(i>=list.length)return;
+  lbImg.onload=function(){lbCap.textContent=o;};
+  lbImg.onerror=function(){tryLoad(list,i+1,o);};
+  lbImg.src='img/'+list[i];
+}
+function openLightbox(base,name){
+  lbCap.textContent=name;
+  lbImg.removeAttribute('src');
+  lb.hidden=false;
+  tryLoad(LB_EXT.map(function(e){return base+e;}),0,name);
+}
+function closeLightbox(){lb.hidden=true;lbImg.removeAttribute('src');}
+lb.addEventListener('click',function(e){if(e.target===lb||e.target.id==='lbX')closeLightbox();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)closeLightbox();});
+
+/* ---------- корзина ---------- */
+function addToCart(id,q,u){
+  var c=cart[id];
+  if(c){
+    if(c.u===u)c.q=Math.round((c.q+q)*1000)/1000;
+    else{c.q=q;c.u=u;}
+  }else cart[id]={q:q,u:u};
+  save('kb_cart',cart);updBadges();
+}
+function cartCount(){var n=0;Object.keys(cart).forEach(function(k){n+=cart[k].u==='кг'?1:1;});return Object.keys(cart).length;}
+function cartTotal(){
+  var t=0;
+  Object.keys(cart).forEach(function(k){
+    var o=BYID[k];if(!o)return;
+    t+=o.p*cart[k].q;
+  });
+  return t;
+}
+function updBadges(){
+  var n=cartCount();
+  $cartBdg.textContent=n;$cartBdg.classList.toggle('on',n>0);
+  $ordBdg.textContent=orders.length;$ordBdg.classList.toggle('on',orders.length>0);
+}
+function openOv(id){document.querySelectorAll('.ov').forEach(function(o){o.classList.remove('on');});document.getElementById(id).classList.add('on');document.body.style.overflow='hidden';}
+function closeOv(){document.querySelectorAll('.ov').forEach(function(o){o.classList.remove('on');});document.body.style.overflow='';}
+document.querySelectorAll('.ov .ov-close').forEach(function(b){b.addEventListener('click',closeOv);});
+
+var $cartView=document.getElementById('cartView'),$cartList=document.getElementById('cartList');
 function renderCart(){
-  var ids=Object.keys(cart), html='';
-  if(!ids.length) html='<div class="empty"><div class="big">🛒</div><div>Корзина пуста.<br>Добавьте товары из каталога.</div></div>';
-  for(var i=0;i<ids.length;i++){
-    var o=BYID[ids[i]]; if(!o) continue;
-    html+='<div class="crow"><div class="ctxt"><div class="name">'+esc(o.n)+'</div>'
-      +'<div class="cat">'+fmt(o.p)+' ₽ / ед.</div></div>'
-      +'<div class="qty"><button data-qm="'+ids[i]+'">−</button><span>'+cart[ids[i]]+'</span><button data-qp="'+ids[i]+'">+</button></div>'
-      +'<div class="csum">'+fmt(o.p*cart[ids[i]])+' ₽</div>'
-      +'<button class="cdel" data-del="'+ids[i]+'">✕</button></div>';
+  var keys=Object.keys(cart);
+  if(!keys.length){
+    $cartList.innerHTML='<div class="empty"><div class="big">🛒</div><div>Корзина пуста.<br>Добавьте товары из каталога.</div></div>';
+    document.getElementById('cartSum').style.display='none';
+    document.getElementById('toOrder').style.display='none';
+    document.getElementById('cartClear').style.display='none';
+    return;
   }
-  document.getElementById('cartList').innerHTML=html;
+  var h='';
+  keys.forEach(function(k){
+    var o=BYID[k];if(!o)return;
+    var c=cart[k];
+    h+='<div class="crow">'
+      +'<div class="nm">'+esc(o.n)+'<div style="color:var(--muted);font-size:12px;margin-top:2px">'+fmt(o.p)+' ₽</div></div>'
+      +'<div class="qty"><button data-cact="minus" data-id="'+k+'">−</button>'
+      +'<input data-cact="q" data-id="'+k+'" inputmode="decimal" value="'+(c.u==='кг'?fmt3(c.q):c.q)+'">'
+      +'<button data-cact="plus" data-id="'+k+'">+</button></div>'
+      +'<select class="unit" data-cact="u" data-id="'+k+'"><option value="шт"'+(c.u==='шт'?' selected':'')+'>шт</option><option value="кг"'+(c.u==='кг'?' selected':'')+'>кг</option></select>'
+      +'<div class="pr">'+fmt(o.p*c.q)+' ₽</div>'
+      +'<button class="del" data-cact="del" data-id="'+k+'" title="Удалить">✕</button></div>';
+  });
+  $cartList.innerHTML=h;
+  document.getElementById('cartSum').style.display='flex';
   document.getElementById('cartTotal').textContent=fmt(cartTotal())+' ₽';
-  document.getElementById('btnCheckout').style.display=ids.length?'':'none';
+  document.getElementById('toOrder').style.display='block';
+  document.getElementById('cartClear').style.display='block';
 }
-document.getElementById('cartList').addEventListener('click', function(e){
-  var id, b;
-  if(b=e.target.closest('[data-qm]')){ id=b.getAttribute('data-qm'); cart[id]=Math.max(1,cart[id]-1); }
-  else if(b=e.target.closest('[data-qp]')){ id=b.getAttribute('data-qp'); cart[id]=cart[id]+1; }
-  else if(b=e.target.closest('[data-del]')){ id=b.getAttribute('data-del'); delete cart[id]; }
-  else return;
-  save('kcart6',cart); updateBadge(); renderCart();
+$cartList.addEventListener('click',function(e){
+  var el=e.target.closest('[data-cact]');if(!el||el.tagName!=='BUTTON')return;
+  var k=el.dataset.id,c=cart[k];if(!c)return;
+  if(el.dataset.cact==='minus')c.q=Math.max(1,Math.round((c.q-1)*1000)/1000);
+  if(el.dataset.cact==='plus')c.q=Math.round((c.q+1)*1000)/1000;
+  if(el.dataset.cact==='del')delete cart[k];
+  save('kb_cart',cart);updBadges();renderCart();
 });
-document.getElementById('btnCart').addEventListener('click', function(){ renderCart(); show('cart'); });
-document.getElementById('btnCartBack').addEventListener('click', function(){ show('catalog'); });
-document.getElementById('btnCartClear').addEventListener('click', function(){
-  cart={}; save('kcart6',cart); updateBadge(); renderCart();
+$cartList.addEventListener('input',function(e){
+  var el=e.target.closest('[data-cact]');if(!el)return;
+  var k=el.dataset.id,c=cart[k];if(!c)return;
+  if(el.dataset.cact==='q'){
+    var v=parseFloat(el.value.replace(',','.'));
+    if(!isNaN(v)&&v>0)c.q=Math.round(v*1000)/1000;
+    save('kb_cart',cart);
+    var o=BYID[k];
+    var row=el.closest('.crow').querySelector('.pr');
+    if(o&&row)row.textContent=fmt(o.p*c.q)+' ₽';
+    document.getElementById('cartTotal').textContent=fmt(cartTotal())+' ₽';
+  }
 });
+$cartList.addEventListener('change',function(e){
+  var el=e.target.closest('[data-cact]');if(!el||el.tagName!=='SELECT')return;
+  var c=cart[el.dataset.id];if(!c)return;
+  c.u=el.value;save('kb_cart',cart);renderCart();
+});
+document.getElementById('cartClear').addEventListener('click',function(){
+  if(confirm('Очистить корзину?')){cart={};save('kb_cart',cart);updBadges();renderCart();}
+});
+document.getElementById('toOrder').addEventListener('click',function(){
+  document.getElementById('orderTotal').textContent=fmt(cartTotal())+' ₽';
+  document.getElementById('ordName').value=lastBuyer||'';
+  openOv('orderView');
+});
+document.getElementById('btnCart').addEventListener('click',function(){renderCart();openOv('cartView');});
 
-// ---------- оформление ----------
-document.getElementById('btnCheckout').addEventListener('click', function(){
-  if(!cartCount()) return;
-  document.getElementById('ordName').value=prefs.buyer||'';
-  document.getElementById('ordPhone').value=prefs.phone||'';
-  document.getElementById('ordComment').value='';
-  document.getElementById('ordErr').style.display='none';
-  document.getElementById('modal-order').style.display='flex';
-});
-document.getElementById('btnOrderCancel').addEventListener('click', closeModal);
-document.getElementById('modal-order').addEventListener('click', function(e){
-  if(e.target===this) closeModal();
-});
-function closeModal(){ document.getElementById('modal-order').style.display='none'; }
-
-document.getElementById('btnOrderOk').addEventListener('click', function(){
-  var name=document.getElementById('ordName').value.trim();
-  var phone=document.getElementById('ordPhone').value.replace(/[^\d+]/g,'');
+/* ---------- оформление заказа ---------- */
+document.getElementById('ordPhone').addEventListener('input',function(){document.getElementById('errPhone').style.display='none';});
+document.getElementById('ordName').addEventListener('input',function(){document.getElementById('errName').style.display='none';});
+document.getElementById('sendOrder').addEventListener('click',function(){
+  var name=document.getElementById('ordName').value.trim(),
+      phone=document.getElementById('ordPhone').value.trim(),
+      note=document.getElementById('ordNote').value.trim();
+  var ok=true;
+  if(!name){document.getElementById('errName').style.display='block';ok=false;}
   var digits=phone.replace(/\D/g,'');
-  var err='';
-  if(!name) err='Укажите имя покупателя';
-  else if(digits.length<10) err='В телефоне должно быть минимум 10 цифр';
-  var el=document.getElementById('ordErr');
-  if(err){ el.textContent=err; el.style.display='block'; return; }
-  prefs.buyer=name; prefs.phone=phone; savePrefs();
+  if(digits.length<10){document.getElementById('errPhone').style.display='block';ok=false;}
+  if(!ok)return;
   var items=[];
-  Object.keys(cart).forEach(function(id){
-    var o=BYID[id]; if(o) items.push({n:o.n, qty:cart[id], unit:'шт', price:o.p});
+  Object.keys(cart).forEach(function(k){
+    var o=BYID[k];if(!o)return;
+    items.push({n:o.n,p:o.p,q:cart[k].q,u:cart[k].u});
   });
-  var num=parseInt(prefs.invNum,10)||35157;
-  var order={num:num, date:todayStr(), name:name, phone:phone,
-    comment:document.getElementById('ordComment').value.trim(),
-    items:items, total:cartTotal()};
-  orders.push(order); save('korders',orders);
-  prefs.invNum=num+1; savePrefs();
-  cart={}; save('kcart6',cart); updateBadge();
-  closeModal();
-  openInvoice(order);
+  var ord={id:'o'+Date.now(),ts:Date.now(),name:name,phone:phone,note:note,items:items,total:cartTotal()};
+  orders.unshift(ord);
+  save('kb_orders',orders);
+  lastBuyer=name;save('kb_buyer',name);
+  cart={};save('kb_cart',cart);updBadges();
+  closeOv();
+  openInvoice(ord);
 });
 
-// ---------- накладная ----------
-var inv=null;
-function openInvoice(order){
-  inv={num:String(order.num), date:order.date, supplier:prefs.supplier||'',
-    buyer:order.name||prefs.buyer||'', exec:prefs.exec||'',
-    rows:order.items.map(function(it){ return {n:it.n, qty:it.qty, unit:it.unit||'шт', price:it.price}; })};
-  renderInvoice(); show('invoice');
+/* ---------- заявки ---------- */
+document.getElementById('btnOrders').addEventListener('click',function(){renderOrders();openOv('ordersView');});
+function dstr(ts){
+  var d=new Date(ts);
+  return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
 }
-function invTotal(){ var s=0; inv.rows.forEach(function(r){ s+=r.qty*r.price; }); return s; }
-
-function renderInvoice(){
-  document.getElementById('invNum').value=inv.num;
-  document.getElementById('invDate').value=inv.date;
-  document.getElementById('invSupplier').value=inv.supplier;
-  document.getElementById('invBuyer').value=inv.buyer;
-  document.getElementById('invExec').value=inv.exec;
-  var html='';
-  for(var i=0;i<inv.rows.length;i++){
-    var r=inv.rows[i];
-    html+='<tr><td class="c">'+(i+1)+'</td>'
-      +'<td><input class="in-n" data-i="'+i+'" value="'+esc(r.n)+'"></td>'
-      +'<td><input class="in-q" data-i="'+i+'" inputmode="decimal" value="'+qtyStr(r.qty)+'"></td>'
-      +'<td><select class="in-u" data-i="'+i+'">'
-      +'<option value="шт"'+(r.unit==='шт'?' selected':'')+'>шт</option>'
-      +'<option value="кг"'+(r.unit==='кг'?' selected':'')+'>кг</option></select></td>'
-      +'<td><input class="in-p" data-i="'+i+'" inputmode="decimal" value="'+qtyStr(r.price)+'"></td>'
-      +'<td class="csum">'+fmt(r.qty*r.price)+'</td>'
-      +'<td class="c"><button class="idel" data-i="'+i+'">✕</button></td></tr>';
-  }
-  document.getElementById('invBody').innerHTML=html;
-  refreshInvTotals();
-}
-function refreshInvTotals(){
-  var t=invTotal();
-  document.getElementById('invTotal').textContent=fmt(t)+' ₽';
-  document.getElementById('invWords').textContent=sumWords(t);
-}
-document.getElementById('invTable').addEventListener('input', function(e){
-  var t=e.target, i=parseInt(t.getAttribute('data-i'),10);
-  if(isNaN(i)||!inv.rows[i]) return;
-  if(t.classList.contains('in-n')) inv.rows[i].n=t.value;
-  else if(t.classList.contains('in-q')) inv.rows[i].qty=parseNum(t.value);
-  else if(t.classList.contains('in-p')) inv.rows[i].price=parseNum(t.value);
-  else if(t.classList.contains('in-u')) inv.rows[i].unit=t.value;
-  var row=t.closest('tr');
-  row.cells[5].textContent=fmt(inv.rows[i].qty*inv.rows[i].price);
-  refreshInvTotals();
-});
-document.getElementById('invTable').addEventListener('click', function(e){
-  var d=e.target.closest('button.idel');
-  if(d){ inv.rows.splice(parseInt(d.getAttribute('data-i'),10),1); renderInvoice(); }
-});
-document.getElementById('btnInvAddRow').addEventListener('click', function(){
-  inv.rows.push({n:'', qty:1, unit:'шт', price:0});
-  renderInvoice();
-  var ins=document.querySelectorAll('#invBody .in-n');
-  if(ins.length) ins[ins.length-1].focus();
-});
-['invNum','invDate','invSupplier','invBuyer','invExec'].forEach(function(id){
-  document.getElementById(id).addEventListener('input', function(e){
-    var v=e.target.value;
-    if(id==='invNum'){ inv.num=v; var n=parseInt(v,10); if(!isNaN(n)){ prefs.invNum=n; savePrefs(); } }
-    else if(id==='invDate') inv.date=v;
-    else if(id==='invSupplier'){ inv.supplier=v; prefs.supplier=v; savePrefs(); }
-    else if(id==='invBuyer'){ inv.buyer=v; prefs.buyer=v; savePrefs(); }
-    else { inv.exec=v; prefs.exec=v; savePrefs(); }
-  });
-});
-document.getElementById('btnInvBack').addEventListener('click', function(){ show('orders'); });
-
-// ---------- печать ----------
-function fillPrint(){
-  var t=invTotal();
-  var h='<div class="pa"><div class="ptitle">Реализация товаров № '+esc(inv.num)+' от '+esc(inv.date)+' г.</div>'
-    +'<div class="pline">Поставщик: <b>'+esc(inv.supplier||'поставщик')+'</b></div>'
-    +'<div class="pline">Покупатель: <b>'+esc(inv.buyer||'—')+'</b></div>'
-    +'<table class="ptable"><tr><th>№</th><th>Товар</th><th>Количество</th><th></th><th>Цена</th><th>Сумма</th></tr>';
-  for(var i=0;i<inv.rows.length;i++){
-    var r=inv.rows[i];
-    h+='<tr><td>'+(i+1)+'</td><td>'+esc(r.n)+'</td><td class="r">'+qtyStr(r.qty)+'</td>'
-      +'<td>'+esc(r.unit)+'</td><td class="r">'+qtyStr(r.price)+'</td>'
-      +'<td class="r">'+fmt(r.qty*r.price)+'</td></tr>';
-  }
-  h+='</table>'
-    +'<div class="ptotal">Итого: <span>'+fmt(t)+'</span></div>'
-    +'<div class="ptotal">В том числе НДС: <span>0</span></div>'
-    +'<div class="pn">Всего наименований '+inv.rows.length+', на сумму '+fmt(t)+' руб.</div>'
-    +'<div class="pb">'+sumWords(t)+'</div>'
-    +'<div class="psign">Отпустил <span class="ul"><span class="exec">'+esc(inv.exec)+'</span></span> Получил <span class="ul"></span></div></div>';
-  document.getElementById('printArea').innerHTML=h;
-}
-document.getElementById('btnPrint').addEventListener('click', function(){ fillPrint(); window.print(); });
-
-// ---------- CSV для 1С ----------
-function csvCell(v){ v=String(v); if(v.indexOf(';')>=0||v.indexOf('"')>=0) v='"'+v.replace(/"/g,'""')+'"'; return v; }
-document.getElementById('btnCsv').addEventListener('click', function(){
-  var t=invTotal();
-  var lines=['Номер;Дата;Поставщик;Покупатель;№ строки;Товар;Количество;Единица;Цена;Сумма'];
-  for(var i=0;i<inv.rows.length;i++){
-    var r=inv.rows[i];
-    lines.push([csvCell(inv.num), csvCell(inv.date), csvCell(inv.supplier), csvCell(inv.buyer),
-      i+1, csvCell(r.n), qtyStr(r.qty), r.unit, qtyStr(r.price), fmt(r.qty*r.price)].join(';'));
-  }
-  lines.push('И;;;;;;;;;;;'+fmt(t));
-  var blob=new Blob(['\ufeff'+lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='nakladnaya-'+inv.num+'.csv';
-  document.body.appendChild(a); a.click(); a.remove();
-});
-
-// ---------- копирование ----------
-function copyText(s){
-  function fallback(){
-    var ta=document.createElement('textarea'); ta.value=s;
-    document.body.appendChild(ta); ta.select();
-    try{ document.execCommand('copy'); toast('Скопировано'); }catch(e){}
-    ta.remove();
-  }
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(s).then(function(){ toast('Скопировано'); }, fallback);
-  } else fallback();
-}
-document.getElementById('btnInvCopy').addEventListener('click', function(){
-  var t=invTotal();
-  var txt='Накладная № '+inv.num+' от '+inv.date+'\n';
-  if(inv.buyer) txt+='Покупатель: '+inv.buyer+'\n';
-  for(var i=0;i<inv.rows.length;i++){
-    var r=inv.rows[i];
-    txt+=(i+1)+'. '+r.n+' — '+qtyStr(r.qty)+' '+r.unit+' × '+qtyStr(r.price)+' = '+fmt(r.qty*r.price)+' руб.\n';
-  }
-  txt+='Итого: '+fmt(t)+' руб.\n'+sumWords(t);
-  copyText(txt);
-});
-
-// ---------- заявки ----------
 function renderOrders(){
-  var html='';
-  if(!orders.length) html='<div class="empty"><div class="big">📋</div><div>Заявок пока нет.</div></div>';
-  for(var i=orders.length-1;i>=0;i--){
-    var o=orders[i];
-    html+='<div class="ocard"><div class="ohead">№ '+esc(o.num)+' от '+esc(o.date)+' · '+fmt(o.total)+' ₽</div>'
-      +'<div class="osub">'+esc(o.name)+(o.phone?' · '+esc(o.phone):'')+' · позиций: '+o.items.length+'</div>'
-      +'<div class="obtns"><button class="btn-primary" data-inv="'+i+'">📄 Накладная</button>'
-      +'<button class="btn-ghost" data-ocopy="'+i+'">📋 Копировать</button>'
-      +'<button class="btn-ghost" data-odel="'+i+'">Удалить</button></div></div>';
-  }
-  document.getElementById('ordersList').innerHTML=html;
+  var el=document.getElementById('ordersList');
+  if(!orders.length){el.innerHTML='<div class="empty"><div class="big">📋</div><div>Заявок пока нет.<br>Соберите корзину и оформите заказ.</div></div>';return;}
+  var h='';
+  orders.forEach(function(o){
+    h+='<div class="orow"><div class="ot"><span>'+dstr(o.ts)+' · '+esc(o.name)+'</span><b>'+fmt(o.total)+' ₽</b></div>'
+      +(o.note?'<div style="font-size:12px;color:var(--muted);margin-top:3px">'+esc(o.note)+'</div>':'')
+      +'<div style="font-size:12px;color:var(--muted);margin-top:3px">Позиций: '+o.items.length+'</div>'
+      +'<div class="ob"><button class="mbtn pri" data-oact="inv" data-oid="'+o.id+'">📄 Накладная</button>'
+      +'<button class="mbtn" data-oact="copy" data-oid="'+o.id+'">📋 Копировать</button>'
+      +'<button class="mbtn del" data-oact="del" data-oid="'+o.id+'">🗑 Удалить</button></div></div>';
+  });
+  el.innerHTML=h;
 }
-document.getElementById('btnOrders').addEventListener('click', function(){ renderOrders(); show('orders'); });
-document.getElementById('btnOrdersBack').addEventListener('click', function(){ show('catalog'); });
-document.getElementById('ordersList').addEventListener('click', function(e){
-  var b;
-  if(b=e.target.closest('[data-inv]')){ openInvoice(orders[parseInt(b.getAttribute('data-inv'),10)]); return; }
-  if(b=e.target.closest('[data-ocopy]')){ copyOrder(parseInt(b.getAttribute('data-ocopy'),10)); return; }
-  if(b=e.target.closest('[data-odel]')){
-    orders.splice(parseInt(b.getAttribute('data-odel'),10),1);
-    save('korders',orders); renderOrders();
+document.getElementById('ordersList').addEventListener('click',function(e){
+  var el=e.target.closest('[data-oact]');if(!el)return;
+  var o=orders.find(function(x){return x.id===el.dataset.oid;});if(!o)return;
+  if(el.dataset.oact==='inv'){openInvoice(o);}
+  else if(el.dataset.oact==='copy'){copyText(orderText(o),el);}
+  else if(el.dataset.oact==='del'){
+    if(confirm('Удалить заявку от '+dstr(o.ts)+'?')){
+      orders=orders.filter(function(x){return x.id!==o.id;});
+      save('kb_orders',orders);updBadges();renderOrders();
+    }
   }
 });
-function copyOrder(i){
-  var o=orders[i];
-  var txt='Заявка № '+o.num+' от '+o.date+'\n'+o.name+(o.phone?', '+o.phone:'')+'\n';
-  for(var j=0;j<o.items.length;j++){
-    var it=o.items[j];
-    txt+=(j+1)+'. '+it.n+' — '+qtyStr(it.qty)+' '+(it.unit||'шт')+' × '+qtyStr(it.price)+' = '+fmt(it.qty*it.price)+' руб.\n';
-  }
-  txt+='Итого: '+fmt(o.total)+' руб.';
-  copyText(txt);
+function orderText(o){
+  var s='Заявка от '+dstr(o.ts)+'\nПокупатель: '+o.name+'\nТелефон: '+o.phone+'\n';
+  if(o.note)s+='Комментарий: '+o.note+'\n';
+  s+='\n';
+  o.items.forEach(function(it,i){s+=(i+1)+'. '+it.n+' — '+(it.u==='кг'?fmt3(it.q)+' кг':it.q+' шт')+' × '+fmt(it.p)+' = '+fmt(it.p*it.q)+' ₽\n';});
+  s+='\nИтого: '+fmt(o.total)+' ₽';
+  return s;
+}
+function copyText(s,btn){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(s).then(function(){flash(btn);},function(){fallbackCopy(s,btn);});
+  }else fallbackCopy(s,btn);
+}
+function fallbackCopy(s,btn){
+  var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);
+  ta.select();try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);flash(btn);
+}
+function flash(btn){
+  var t=btn.textContent;btn.textContent='Скопировано ✓';
+  setTimeout(function(){btn.textContent=t;},1400);
 }
 
-// ---------- сумма прописью ----------
-function sumWords(n){
-  n=Math.round(n*100)/100;
-  var rub=Math.floor(n), kop=Math.round((n-rub)*100);
-  if(kop===100){ rub++; kop=0; }
-  var ru=['','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
-  var rf=['','одна','две','три','четыре','пять','шесть','семь','восемь','девять'];
-  var t1=['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
-  var te=['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
-  var hc=['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
-  function tri(x,f){
-    var s=[], c=Math.floor(x/100), d=Math.floor((x%100)/10), e=x%10;
-    if(c) s.push(hc[c]);
-    if(d===1) s.push(te[e]);
-    else { if(d) s.push(t1[d]); if(e) s.push(f?rf[e]:ru[e]); }
+/* ---------- сумма прописью ---------- */
+function rubWords(n){
+  function one(i,g){return g[i];}
+  var m=['один','два','три','четыре','пять','шесть','семь','восемь','девять'],
+      f=['одна','две','три','четыре','пять','шесть','семь','восемь','девять'],
+      t10=['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'],
+      t20=['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'],
+      h=['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+  function triple(x,gender){
+    var s=[];
+    var c=Math.floor(x/100),d2=x%100;
+    if(c)s.push(h[c]);
+    if(d2>=10&&d2<20)s.push(t10[d2-10]);
+    else{
+      var dd=Math.floor(d2/10),ee=d2%10;
+      if(dd)s.push(t20[dd]);
+      if(ee){
+        if(gender==='f')s.push(f[ee-1]);else s.push(m[ee-1]);
+      }
+    }
     return s.join(' ');
   }
-  function form(x,f){
-    var m=x%10, h=x%100;
-    if(h>=11&&h<=14) return f[2];
-    if(m===1) return f[0];
-    if(m>=2&&m<=4) return f[1];
-    return f[2];
+  function form(n,f1,f2,f5){
+    var n10=n%10,n100=n%100;
+    if(n100>=11&&n100<=14)return f5;
+    if(n10===1)return f1;
+    if(n10>=2&&n10<=4)return f2;
+    return f5;
   }
-  var out='';
-  var mil=Math.floor(rub/1000000);
-  if(mil) out+=tri(mil,false)+' '+form(mil,['миллион','миллиона','миллионов'])+' ';
-  var th=Math.floor(rub%1000000/1000);
-  if(th) out+=tri(th,true)+' '+form(th,['тысяча','тысячи','тысяч'])+' ';
-  var r3=rub%1000;
-  if(r3||!rub) out+=tri(r3,false)+' ';
-  out+=form(rub,['рубль','рубля','рублей']);
-  if(rub===0) out='ноль рублей';
-  var kf=form(kop,['копейка','копейки','копеек']);
-  return out.charAt(0).toUpperCase()+out.slice(1)+' '+(kop<10?'0'+kop:kop)+' '+kf;
+  n=Math.floor(n);
+  var kop=Math.round((n-Math.floor(n))*100);
+  var rub=Math.floor(n);
+  var parts=[];
+  var mil=Math.floor(rub/1000000), th=Math.floor(rub%1000000/1000), rest=rub%1000;
+  if(mil)parts.push(triple(mil,'m')+' '+form(mil,'миллион','миллиона','миллионов'));
+  if(th)parts.push(triple(th,'f')+' '+form(th,'тысяча','тысячи','тысяч'));
+  if(rest)parts.push(triple(rest,'m'));
+  if(!rub)parts.push('ноль');
+  var s=parts.join(' ');
+  s=s.charAt(0).toUpperCase()+s.slice(1);
+  s+=' рубль'+form(rub%100,'','а','ов');
+  var k2=kop%10,k100=kop%100;
+  if(k100>=11&&k100<=14)s+=' '+kop+' копеек';
+  else if(k2===1)s+=' '+kop+' копейка';
+  else if(k2>=2&&k2<=4)s+=' '+kop+' копейки';
+  else s+=' '+kop+' копеек';
+  return s;
 }
 
-// ---------- установка и офлайн ----------
-window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault(); window._dp=e; $install.style.display='block';
+/* ---------- накладная ---------- */
+var invState=null; // {num,date,sup,buy,rows:[{n,q,u,p}], fromOrder}
+function todayStr(){
+  var d=new Date();
+  return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+}
+function openInvoice(ord){
+  invState={
+    num:String(invNum),
+    date:todayStr(),
+    sup:invSup,
+    buy:ord?ord.name:lastBuyer,
+    rows:(ord?ord.items:[]).map(function(it){return {n:it.n,q:it.q,u:it.u,p:it.p};}),
+    orderId:ord?ord.id:null
+  };
+  renderInvoice();
+  openOv('invoiceView');
+}
+function renderInvoice(){
+  var st=invState;
+  document.getElementById('invNum').value=st.num;
+  document.getElementById('invDate').value=st.date;
+  document.getElementById('invSup').value=st.sup;
+  document.getElementById('invBuy').value=st.buy;
+  document.getElementById('invTitle').textContent='Реализация товаров № '+st.num+' от '+st.date+' г.';
+  document.getElementById('invSig').textContent=invSig;
+  var h='';
+  st.rows.forEach(function(r,i){
+    h+='<tr><td class="c">'+(i+1)+'</td>'
+      +'<td class="txt"><input data-ic="n" data-i="'+i+'" value="'+esc(r.n)+'"></td>'
+      +'<td class="num" style="min-width:76px"><input data-ic="q" data-i="'+i+'" inputmode="decimal" value="'+(r.u==='кг'?fmt3(r.q):String(r.q).replace('.',','))+'"></td>'
+      +'<td class="c" style="min-width:52px"><select data-ic="u" data-i="'+i+'"><option value="шт"'+(r.u==='шт'?' selected':'')+'>шт</option><option value="кг"'+(r.u==='кг'?' selected':'')+'>кг</option></select></td>'
+      +'<td class="num" style="min-width:76px"><input data-ic="p" data-i="'+i+'" inputmode="decimal" value="'+fmt(r.p)+'"></td>'
+      +'<td class="num" style="min-width:86px">'+fmt(r.q*r.p)+'</td>'
+      +'<td class="c irow-del-col"><button class="irow-del" data-ic="del" data-i="'+i+'" title="Удалить строку">✕</button></td></tr>';
+  });
+  document.getElementById('invBody').innerHTML=h;
+  var total=st.rows.reduce(function(s,r){return s+r.q*r.p;},0);
+  document.getElementById('invTotal').textContent=fmt(total);
+  document.getElementById('invVat').textContent='0';
+  document.getElementById('invCount').textContent='Всего наименований '+st.rows.length+', на сумму '+fmt(total).replace(' ',' ')+' руб.';
+  document.getElementById('invProp').textContent=rubWords(total);
+}
+document.getElementById('invBody').addEventListener('input',function(e){
+  var el=e.target.closest('[data-ic]');if(!el)return;
+  var i=+el.dataset.i,r=invState.rows[i];if(!r)return;
+  var k=el.dataset.ic;
+  if(k==='n')r.n=el.value;
+  else if(k==='q'||k==='p'){
+    var v=parseFloat(el.value.replace(',','.'));
+    if(!isNaN(v)&&v>=0)r[k]=Math.round(v*1000)/1000;
+    renderTotals();
+  }
 });
-$install.addEventListener('click', function(){
-  if(window._dp){ window._dp.prompt(); window._dp=null; $install.style.display='none'; }
+document.getElementById('invBody').addEventListener('change',function(e){
+  var el=e.target.closest('[data-ic]');if(!el)return;
+  if(el.dataset.ic==='u'){invState.rows[+el.dataset.i].u=el.value;renderInvoice();}
 });
+document.getElementById('invBody').addEventListener('click',function(e){
+  var el=e.target.closest('[data-ic="del"]');if(!el)return;
+  invState.rows.splice(+el.dataset.i,1);renderInvoice();
+});
+function renderTotals(){
+  var total=invState.rows.reduce(function(s,r){return s+r.q*r.p;},0);
+  document.getElementById('invTotal').textContent=fmt(total);
+  document.getElementById('invCount').textContent='Всего наименований '+invState.rows.length+', на сумму '+fmt(total)+' руб.';
+  document.getElementById('invProp').textContent=rubWords(total);
+  var rows=document.querySelectorAll('#invBody tr');
+  invState.rows.forEach(function(r,i){
+    var td=rows[i]&&rows[i].children[5];
+    if(td)td.textContent=fmt(r.q*r.p);
+  });
+}
+['invNum','invDate','invSup','invBuy'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',function(e){
+    var m={'invNum':'num','invDate':'date','invSup':'sup','invBuy':'buy'};
+    invState[m[id]]=e.target.value;
+    if(id==='invNum'||id==='invDate')document.getElementById('invTitle').textContent='Реализация товаров № '+invState.num+' от '+invState.date+' г.';
+  });
+});
+document.getElementById('invPrint').addEventListener('click',function(){window.print();});
+document.getElementById('invCsv').addEventListener('click',function(){
+  var st=invState,lines=[];
+  lines.push('Номер;Дата;Поставщик;Покупатель;№ строки;Товар;Количество;Единица;Цена;Сумма');
+  st.rows.forEach(function(r,i){
+    lines.push([st.num,st.date,st.sup,st.buy,i+1,r.n,String(r.q).replace('.',','),r.u,String(r.p).replace('.',','),(r.q*r.p).toFixed(2).replace('.',',')].map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(';'));
+  });
+  var total=st.rows.reduce(function(s,r){return s+r.q*r.p;},0);
+  lines.push(';;;;;;;"Итого";;'+total.toFixed(2).replace('.',','));
+  var csv='\ufeff'+lines.join('\r\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='realizaciya_'+st.num+'_'+st.date.replace(/\./g,'-')+'.csv';
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);document.body.removeChild(a);},300);
+});
+document.getElementById('invCopy').addEventListener('click',function(){
+  var st=invState,s='Реализация товаров № '+st.num+' от '+st.date+' г.\nПоставщик: '+st.sup+'\nПокупатель: '+st.buy+'\n\n';
+  st.rows.forEach(function(r,i){s+=(i+1)+'. '+r.n+' — '+(r.u==='кг'?fmt3(r.q)+' кг':r.q+' шт')+' × '+fmt(r.p)+' = '+fmt(r.q*r.p)+' ₽\n';});
+  var total=st.rows.reduce(function(a,r){return a+r.q*r.p;},0);
+  s+='\nИтого: '+fmt(total)+' ₽ (в т.ч. НДС: 0)\n'+rubWords(total);
+  copyText(s,document.getElementById('invCopy'));
+});
+document.getElementById('invSetup').addEventListener('click',function(){
+  document.getElementById('setSup').value=invSup;
+  document.getElementById('setSig').value=invSig;
+  document.getElementById('setNum').value=invNum;
+  openOv('setupView');
+});
+document.getElementById('setSave').addEventListener('click',function(){
+  invSup=document.getElementById('setSup').value.trim()||invSup;
+  invSig=document.getElementById('setSig').value.trim()||invSig;
+  var n=parseInt(document.getElementById('setNum').value,10);
+  if(!isNaN(n)&&n>0)invNum=n;
+  save('kb_inv_sup',invSup);save('kb_inv_sig',invSig);save('kb_inv_num',invNum);
+  closeOv();
+  if(invState){invState.sup=invSup;invState.sig=invSig;renderInvoice();}
+});
+
+/* после сохранения заявки номер накладной увеличивается при закрытии накладной */
+(function(){
+  var observer=new MutationObserver(function(){});
+})();
+document.addEventListener('click',function(e){
+  if(e.target.closest&&e.target.closest('.ov-close')&&document.getElementById('invoiceView').classList.contains('on')&&invState){
+    invNum=parseInt(invState.num,10)||invNum;
+    save('kb_inv_num',invNum+1);
+  }
+},true);
+
+/* ---------- футер / PWA ---------- */
+$foot.innerHTML=esc(D.note)+' Прайс от '+esc(D.updated)+' · '+ALL.length+' позиций. Работает офлайн — установите приложение через меню браузера («Добавить на главный экран»).';
+
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferredPrompt=e;
+  $install.style.display='block';
+});
+$install.addEventListener('click',function(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;$install.style.display='none';}
+});
+
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').catch(function(){});
 }
 
-$foot.innerHTML=D.note+'. Прайс от '+D.updated+' · '+ALL.length+' позиций. Работает офлайн — установите приложение через меню браузера («Добавить на главный экран»).';
-
-buildChips();
+updBadges();
 apply(true);
-updateBadge();
 })();
 </script>
 </body>
