@@ -1,9 +1,7 @@
-var CACHE='catalog-v8';
+var CACHE='catalog-v8-1';
 var ASSETS=['./','./index.html','./data.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',function(e){
-  e.waitUntil(caches.open(CACHE).then(function(c){
-    return Promise.all(ASSETS.map(function(u){return c.add(u).catch(function(){});}));
-  }).then(function(){return self.skipWaiting();}));
+  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(ASSETS);}).then(function(){return self.skipWaiting();}));
 });
 self.addEventListener('activate',function(e){
   e.waitUntil(caches.keys().then(function(keys){

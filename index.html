@@ -2,589 +2,512 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0f4c81">
 <title>Каталог оптовых цен</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0f4c81">
 <link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#f4f6f8;color:#222;padding-bottom:40px}
-header{position:sticky;top:0;z-index:50;background:#0f4c81;color:#fff;padding:10px 12px}
-header h1{font-size:18px}
-header .sub{font-size:12px;opacity:.85}
-.header-actions{display:flex;gap:8px;margin-top:8px}
-.header-actions button{flex:1;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:9px 6px;font-size:14px;cursor:pointer}
-.header-actions .cnt{background:#ffdd57;color:#0f4c81;border-radius:10px;padding:1px 6px;font-size:12px;margin-left:4px}
-.toolbar{display:flex;gap:8px;padding:10px 12px;background:#fff;border-bottom:1px solid #e3e6ea;position:sticky;top:74px;z-index:40}
-.toolbar select{flex:0 0 40%;max-width:180px;padding:8px;border:1px solid #cfd6dd;border-radius:8px;background:#fff;font-size:14px}
-.toolbar input{flex:1;padding:8px 10px;border:1px solid #cfd6dd;border-radius:8px;font-size:14px}
-#btnReset{background:#eef2f6;border:1px solid #cfd6dd;border-radius:8px;padding:8px 10px;font-size:13px;cursor:pointer;white-space:nowrap}
-#installWrap{padding:10px 12px}
-#btnInstall{width:100%;padding:12px;border:none;border-radius:10px;background:#0f9d58;color:#fff;font-size:15px;cursor:pointer}
-#browserHint{margin:0 12px 10px;padding:10px 12px;background:#fff7e0;border:1px solid #f0d890;border-radius:10px;font-size:13px}
-#browserHint button{margin-top:6px;background:#0f4c81;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer}
-.prod{display:flex;align-items:center;gap:10px;background:#fff;margin:8px 12px;padding:10px 12px;border-radius:12px;border:1px solid #e3e6ea}
-.prod .info{flex:1;min-width:0}
-.prod .name{font-size:14px;line-height:1.3}
-.prod .price{font-size:15px;font-weight:600;margin-top:4px;color:#0f4c81}
-.prod .grp{font-size:11px;color:#8a93a0;margin-top:2px}
-.prod .qty{width:52px;padding:7px 4px;border:1px solid #cfd6dd;border-radius:8px;text-align:center;font-size:14px}
-.prod .add{background:#0f4c81;color:#fff;border:none;border-radius:8px;padding:9px 12px;font-size:13px;cursor:pointer}
-#sentinel,#emptyMsg{text-align:center;color:#8a93a0;font-size:13px;padding:14px}
-.section-title{font-size:16px;font-weight:700;margin:14px 12px 4px}
-.overlay{position:fixed;inset:0;background:rgba(15,30,50,.45);z-index:100;display:none}
-.overlay.open{display:block}
-.sheet{position:fixed;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:#fff;border-radius:16px 16px 0 0;z-index:110;padding:14px 14px 24px;display:none;transform:translateY(100%);transition:transform .2s ease}
-.sheet.open{display:block;transform:translateY(0)}
-.sheet h2{font-size:17px;margin-bottom:10px}
-.sheet .row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #eef1f4;font-size:14px}
-.sheet .row .nm{flex:1;min-width:0}
-.sheet input.qty{width:54px;padding:6px 4px;border:1px solid #cfd6dd;border-radius:8px;text-align:center}
-.sheet .btn{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-size:15px;cursor:pointer;margin-top:10px}
-.btn-primary{background:#0f4c81;color:#fff}
-.btn-green{background:#0f9d58;color:#fff}
-.btn-ghost{background:#eef2f6;color:#333}
-.btn-danger{background:#fdecec;color:#b3261e}
-.field{margin-top:10px}
-.field label{display:block;font-size:13px;color:#555;margin-bottom:4px}
-.field input,.field textarea,.field select{width:100%;padding:10px;border:1px solid #cfd6dd;border-radius:8px;font-size:14px;background:#fff}
-.err{color:#b3261e;font-size:12px;margin-top:3px;display:none}
-.filters{display:flex;gap:6px;margin-bottom:8px}
-.filters button{flex:1;padding:9px 4px;border:1px solid #cfd6dd;background:#fff;border-radius:10px;font-size:13px;cursor:pointer}
-.filters button.active{background:#0f4c81;color:#fff;border-color:#0f4c81}
-.order-card{border:1px solid #e3e6ea;border-radius:12px;padding:10px 12px;margin:8px 0;background:#fff}
-.order-card .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.order-card .num{font-weight:700;font-size:14px}
-.badge{font-size:11px;border-radius:8px;padding:2px 8px;white-space:nowrap}
-.badge.pending{background:#fff3cd;color:#8a6d00}
-.badge.done{background:#dcf5e7;color:#0b6b3a}
-.order-card .meta{font-size:12px;color:#666;margin-top:4px}
-.order-card .actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.order-card .actions button{padding:7px 10px;border-radius:8px;border:1px solid #cfd6dd;background:#f7f9fb;font-size:12px;cursor:pointer}
-.inv-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
-.inv-table th,.inv-table td{border:1px solid #999;padding:5px 4px;text-align:center}
-.inv-table td.tl{text-align:left}
-.inv-table input{width:56px;padding:3px;text-align:center;border:1px solid #bbb;border-radius:4px}
-.inv-head{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.inv-head label{font-size:12px;color:#555;display:block}
-.inv-head input{width:100%;padding:7px;border:1px solid #cfd6dd;border-radius:6px;font-size:13px}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
-#toast.show{opacity:1}
-.note{font-size:12px;color:#777;margin-top:8px}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:#f4f6f8;color:#1c2b3a;padding-bottom:60px}
+header{background:#0f4c81;color:#fff;padding:16px 16px 12px}
+header h1{font-size:22px}
+header .sub{font-size:13px;opacity:.85;margin-top:2px}
+.nav{display:flex;gap:8px;margin-top:10px}
+.nav button{flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);color:#fff;padding:10px;border-radius:10px;font-size:15px;cursor:pointer}
+.nav .badge{display:inline-block;background:#f5b40a;color:#1c2b3a;border-radius:999px;padding:1px 7px;font-weight:700;margin-left:4px}
+.toolbar{position:sticky;top:0;z-index:5;background:#f4f6f8;padding:8px 12px;display:flex;gap:8px;border-bottom:1px solid #e2e7ee}
+.toolbar select,.toolbar input{flex:1;min-width:0;padding:10px;border:1px solid #cfd8e3;border-radius:10px;font-size:15px;background:#fff}
+.banner{background:#fff3cd;color:#7a5c00;padding:10px 14px;font-size:13px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.banner button{background:#7a5c00;color:#fff;border:0;border-radius:8px;padding:6px 10px;white-space:nowrap}
+#list{padding:12px}
+.card{background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(16,42,67,.08);display:flex;align-items:center;gap:10px}
+.card .info{flex:1;min-width:0}
+.card .name{font-weight:600;font-size:14px;line-height:1.3;word-break:break-word}
+.card .grp{font-size:11px;color:#7b8794;letter-spacing:.04em;margin-top:2px;text-transform:uppercase}
+.card .price{font-size:16px;font-weight:700;color:#0f4c81;margin-top:4px;white-space:nowrap}
+.card input.qty{width:56px;padding:8px;text-align:center;border:1px solid #cfd8e3;border-radius:8px;font-size:15px}
+.card .add{background:#0f4c81;color:#fff;border:0;padding:10px 12px;border-radius:10px;font-size:14px;white-space:nowrap;cursor:pointer}
+#moreBtn{display:block;width:calc(100% - 24px);margin:4px 12px 16px;padding:12px;border:1px solid #cfd8e3;background:#fff;border-radius:10px;font-size:14px;cursor:pointer}
+#pageFoot{padding:10px 16px 24px;color:#7b8794;font-size:12px;text-align:center}
+.modal{position:fixed;inset:0;background:rgba(12,28,46,.55);display:none;z-index:20}
+.modal.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;top:auto;max-height:88%;overflow:auto;background:#fff;border-radius:16px 16px 0 0;padding:16px;z-index:21}
+@media(min-width:640px){.sheet{left:50%;right:auto;transform:translateX(-50%);top:6%;bottom:6%;max-width:640px;border-radius:16px}}
+.sheet h2{font-size:18px;margin-bottom:12px;padding-right:32px}
+.close-x{position:absolute;right:10px;top:10px;border:0;background:none;font-size:24px;cursor:pointer;line-height:1}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #eef2f6}
+.row .nm{flex:1;font-size:14px;word-break:break-word}
+.row .pr{font-size:13px;color:#0f4c81;font-weight:700;white-space:nowrap}
+.row input.qty{width:52px;padding:7px;text-align:center;border:1px solid #cfd8e3;border-radius:8px}
+.btn{display:inline-block;background:#eef2f6;border:1px solid #d5dde6;color:#123;padding:9px 12px;border-radius:10px;font-size:14px;cursor:pointer}
+.btn.primary{background:#0f4c81;border-color:#0f4c81;color:#fff}
+.btn.danger{color:#a33}
+.btn.wide{display:block;width:100%;text-align:center;margin-top:10px}
+.total{font-size:17px;font-weight:700;padding:12px 0}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:13px;color:#5b6774;margin-bottom:4px}
+.field input,.field textarea{width:100%;padding:10px;border:1px solid #cfd8e3;border-radius:10px;font-size:15px;font-family:inherit}
+.chips{display:flex;gap:8px;margin-bottom:12px}
+.chip{flex:1;padding:10px;border-radius:10px;border:1px solid #cfd8e3;background:#fff;font-size:14px;cursor:pointer;text-align:center}
+.chip.on{background:#0f4c81;border-color:#0f4c81;color:#fff}
+.ord{border:1px solid #e2e7ee;border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
+.ord .t{font-weight:700;font-size:15px}
+.ord .m{font-size:13px;color:#5b6774;margin:4px 0 8px}
+.ord .acts{display:flex;gap:6px;flex-wrap:wrap}
+.inv-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.inv-table th,.inv-table td{border:1px solid #cfd8e3;padding:5px}
+.inv-table input{width:100%;border:1px solid #cfd8e3;padding:5px;font-size:13px;box-sizing:border-box}
+.inv-head{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media print{
   body *{visibility:hidden}
-  #printArea,#printArea *{visibility:visible}
-  #printArea{position:absolute;left:0;top:0;width:100%;background:#fff}
+  #invoice,#invoice *{visibility:visible}
+  #invoice{position:absolute;inset:0;background:#fff;overflow:visible;display:block !important}
+  #invoice .sheet{position:static;max-height:none;transform:none;border-radius:0;max-width:none;left:0;top:0;bottom:auto;width:100%;overflow:visible}
+  .no-print{display:none !important}
 }
+.err{color:#a33;font-size:13px;margin-top:6px;display:none}
 </style>
 </head>
 <body>
-
 <header>
   <h1>Каталог оптовых цен</h1>
-  <div class="sub" id="noteLine">цены без НДС · с доставкой</div>
-  <div class="header-actions">
-    <button id="btnCart">🛒 Корзина<span class="cnt" id="cartCount" style="display:none">0</span></button>
-    <button id="btnOrders">📋 Заявки<span class="cnt" id="ordersCount" style="display:none">0</span></button>
+  <div class="sub" id="hdrNote">цены без НДС · с доставкой</div>
+  <div class="nav">
+    <button onclick="openCart()">🛒 Корзина<span class="badge" id="cartBadge" style="display:none">0</span></button>
+    <button onclick="openOrders()">📋 Заявки<span class="badge" id="ordBadge" style="display:none">0</span></button>
   </div>
 </header>
 
+<div class="banner" id="miBanner" style="display:none">
+  <span>Для надёжной работы заявок откройте каталог в Chrome</span>
+  <button onclick="copyLink()">Скопировать ссылку</button>
+</div>
+
 <div class="toolbar">
-  <select id="catSelect"><option value="">Все категории</option></select>
-  <input id="search" type="search" placeholder="🔍 Поиск товара">
-  <button id="btnReset">сбросить фильтры</button>
+  <select id="catSel"><option value="all">Все категории</option></select>
+  <input id="search" type="search" placeholder="Поиск товара" autocomplete="off">
 </div>
 
-<div id="installWrap">
-  <button id="btnInstall" hidden>📲 Установить приложение на устройство</button>
-</div>
-<div id="browserHint" hidden></div>
+<div id="list"></div>
+<button id="moreBtn" onclick="moreItems()">Показать ещё</button>
+<div id="pageFoot"></div>
 
-<main>
-  <div id="productList"></div>
-  <div id="sentinel">Прокрутите вниз, чтобы показать ещё…</div>
-  <div id="emptyMsg" hidden>Ничего не найдено.<br>Попробуйте изменить запрос или категорию.</div>
-</main>
-
-<!-- Корзина -->
-<div class="overlay" id="ovCart"></div>
-<div class="sheet" id="shCart">
-  <h2>🛒 Корзина <button class="close-x" data-close="shCart" style="float:right;background:none;border:none;font-size:20px;cursor:pointer">✕</button></h2>
+<!-- КОРЗИНА -->
+<div class="modal" id="cartModal"><div class="sheet">
+  <h2>🛒 Корзина<button class="close-x" onclick="closeModal('cartModal')">×</button></h2>
   <div id="cartBody"></div>
-  <div class="row" style="font-weight:700;border-top:2px solid #0f4c81;margin-top:6px"><span>Итого:</span><span id="cartTotal">0 ₽</span></div>
-  <button class="btn btn-primary" id="btnCheckout">Оформить заказ</button>
-  <button class="btn btn-ghost" data-close="shCart">← В каталог</button>
-  <button class="btn btn-danger" id="btnClearCart">Очистить корзину</button>
-</div>
+  <div class="total" id="cartTotal"></div>
+  <button class="btn primary wide" onclick="openOrderForm()">Оформить заказ</button>
+  <button class="btn wide" onclick="clearCart()">Очистить корзину</button>
+  <button class="btn wide" onclick="closeModal('cartModal')">← В каталог</button>
+</div></div>
 
-<!-- Оформление заказа -->
-<div class="overlay" id="ovCheckout"></div>
-<div class="sheet" id="shCheckout">
-  <h2>Оформление заказа <button class="close-x" data-close="shCheckout" style="float:right;background:none;border:none;font-size:20px;cursor:pointer">✕</button></h2>
-  <div class="field"><label>Ваше имя / название организации *</label><input id="cusName"><div class="err" id="errName">Укажите имя или название</div></div>
-  <div class="field"><label>Телефон *</label><input id="cusPhone" type="tel" inputmode="tel"><div class="err" id="errPhone">Укажите телефон (не менее 10 цифр)</div></div>
-  <div class="field"><label>Комментарий (необязательно)</label><textarea id="cusComment" rows="2"></textarea></div>
-  <div class="row" style="margin-top:10px"><span>Сумма заказа:</span><b id="checkoutTotal">0 ₽</b></div>
-  <button class="btn btn-green" id="btnSaveOrder">Сохранить заявку</button>
-  <button class="btn btn-ghost" data-close="shCheckout">Отмена</button>
-  <div class="note">Заявка сохранится в разделе «📋 Заявки» и сразу откроется накладная для печати и выгрузки в 1С.</div>
-</div>
+<!-- ОФОРМЛЕНИЕ ЗАКАЗА -->
+<div class="modal" id="orderModal"><div class="sheet">
+  <h2>Оформление заказа<button class="close-x" onclick="closeModal('orderModal')">×</button></h2>
+  <div class="field"><label>Имя покупателя *</label><input id="ofName"></div>
+  <div class="field"><label>Телефон *</label><input id="ofPhone" type="tel" inputmode="tel"></div>
+  <div class="field"><label>Комментарий (необязательно)</label><textarea id="ofComment" rows="2"></textarea></div>
+  <div class="total" id="ofTotal"></div>
+  <div class="err" id="ofErr"></div>
+  <button class="btn primary wide" onclick="saveOrder()">Сохранить заявку</button>
+  <button class="btn wide" onclick="closeModal('orderModal')">Отмена</button>
+</div></div>
 
-<!-- Заявки -->
-<div class="overlay" id="ovOrders"></div>
-<div class="sheet" id="shOrders">
-  <h2>📋 Заявки <button class="close-x" data-close="shOrders" style="float:right;background:none;border:none;font-size:20px;cursor:pointer">✕</button></h2>
-  <div class="filters">
-    <button data-f="all" class="active">Все</button>
-    <button data-f="pending">Необработанные</button>
-    <button data-f="done">Выполненные</button>
+<!-- ЗАЯВКИ -->
+<div class="modal" id="ordersModal"><div class="sheet">
+  <h2>📋 Заявки<button class="close-x" onclick="closeModal('ordersModal')">×</button></h2>
+  <div class="chips">
+    <button class="chip on" id="chAll" onclick="setOrdFilter('all')">Все</button>
+    <button class="chip" id="chPend" onclick="setOrdFilter('pending')">Необработанные</button>
+    <button class="chip" id="chDone" onclick="setOrdFilter('done')">Выполненные</button>
   </div>
   <div id="ordersBody"></div>
-  <button class="btn btn-ghost" data-close="shOrders">← В каталог</button>
-  <div class="note">Заявки хранятся в памяти этого браузера и не пропадут при возврате в каталог.</div>
-</div>
+  <button class="btn wide" onclick="closeModal('ordersModal')">← В каталог</button>
+  <p style="font-size:12px;color:#7b8794;margin-top:10px">Заявки хранятся в памяти этого браузера и не пропадут при закрытии страницы.</p>
+</div></div>
 
-<!-- Накладная -->
-<div class="overlay" id="ovInvoice"></div>
-<div class="sheet" id="shInvoice">
-  <h2>📄 Накладная «Реализация товаров» <button class="close-x" data-close="shInvoice" style="float:right;background:none;border:none;font-size:20px;cursor:pointer">✕</button></h2>
-  <div id="printArea">
-    <div class="inv-head">
-      <div><label>Номер</label><input id="invNum"></div>
-      <div><label>Дата</label><input id="invDate" type="date"></div>
-      <div><label>Поставщик</label><input id="invSupplier"></div>
-      <div><label>Покупатель</label><input id="invBuyer"></div>
-    </div>
-    <table class="inv-table">
-      <thead><tr><th>№</th><th>Товар</th><th>Кол-во</th><th>Ед.</th><th>Цена</th><th>Сумма</th></tr></thead>
-      <tbody id="invRows"></tbody>
-      <tfoot><tr><td colspan="5" class="tl"><b>Итого</b></td><td><b id="invTotal">0,00</b></td></tr>
-      <tr><td colspan="5" class="tl">В том числе НДС</td><td>0,00</td></tr></tfoot>
-    </table>
-    <div class="note" id="invFoot">Всего наименований 0, на сумму 0 руб.</div>
-    <div class="inv-head" style="margin-top:8px">
-      <div><label>Отпустил (ФИО под чертой)</label><input id="invFrom"></div>
-      <div><label>Получил</label><input id="invTo"></div>
-    </div>
+<!-- НАКЛАДНАЯ -->
+<div class="modal" id="invoice"><div class="sheet">
+  <h2>📄 Накладная «Реализация товаров»<button class="close-x no-print" onclick="closeModal('invoice')">×</button></h2>
+  <div class="inv-head">
+    <div class="field"><label>Номер накладной</label><input id="invNum"></div>
+    <div class="field"><label>Дата</label><input id="invDate" type="date"></div>
+    <div class="field"><label>Поставщик</label><input id="invSup"></div>
+    <div class="field"><label>Покупатель</label><input id="invBuyer"></div>
+    <div class="field"><label>Отпустил (ФИО под чертой)</label><input id="invFio"></div>
   </div>
-  <button class="btn btn-primary" id="btnPrint">🖨 Печать / PDF</button>
-  <button class="btn btn-green" id="btnCsv">⬇ CSV для 1С</button>
-  <button class="btn btn-ghost" id="btnCopy">📋 Копировать текст</button>
-  <button class="btn btn-ghost" id="btnInvSettings">⚙ Подпись и поставщик</button>
-  <button class="btn btn-ghost" data-close="shInvoice">← Назад</button>
-</div>
+  <table class="inv-table">
+    <thead><tr><th>№</th><th>Товар</th><th style="width:64px">Кол-во</th><th>Ед.</th><th>Цена</th><th>Сумма</th><th class="no-print"></th></tr></thead>
+    <tbody id="invRows"></tbody>
+    <tfoot><tr><td colspan="5" style="text-align:right;font-weight:700">Итого:</td><td id="invSum" style="font-weight:700"></td><td class="no-print"></td></tr></tfoot>
+  </table>
+  <button class="btn no-print" style="margin-top:8px" onclick="addInvRow()">＋ Добавить строку</button>
+  <button class="btn primary wide no-print" onclick="printInv()">🖨 Печать / PDF</button>
+  <button class="btn wide no-print" onclick="csvInv()">⬇ CSV для 1С</button>
+  <button class="btn wide no-print" onclick="copyInv()">📋 Скопировать</button>
+  <button class="btn wide no-print" onclick="closeModal('invoice')">← Назад</button>
+</div></div>
 
-<!-- Настройки накладной -->
-<div class="overlay" id="ovInvSettings"></div>
-<div class="sheet" id="shInvSettings">
-  <h2>⚙ Подпись и поставщик <button class="close-x" data-close="shInvSettings" style="float:right;background:none;border:none;font-size:20px;cursor:pointer">✕</button></h2>
-  <div class="field"><label>Поставщик (для шапки накладной)</label><input id="setSupplier"></div>
-  <div class="field"><label>ФИО для строки «Отпустил»</label><input id="setFio"></div>
-  <div class="field"><label>Следующий номер накладной</label><input id="setNextNum" type="number" min="1"></div>
-  <button class="btn btn-primary" id="btnSaveSettings">Сохранить</button>
-  <button class="btn btn-ghost" data-close="shInvSettings">Закрыть</button>
-</div>
-
-<div id="toast"></div>
+<!-- ПОДПИСЬ И ПОСТАВЩИК -->
+<div class="modal" id="settings"><div class="sheet">
+  <h2>⚙ Подпись и поставщик<button class="close-x" onclick="closeModal('settings')">×</button></h2>
+  <div class="field"><label>Поставщик (для шапки накладной)</label><input id="stSup"></div>
+  <div class="field"><label>ФИО для строки «Отпустил»</label><input id="stFio"></div>
+  <div class="field"><label>Следующий номер накладной</label><input id="stNum" type="number"></div>
+  <div class="err" id="stErr"></div>
+  <button class="btn primary wide" onclick="saveSettings()">Сохранить</button>
+  <button class="btn wide" onclick="closeModal('settings')">Закрыть</button>
+</div></div>
 
 <script src="data.js"></script>
 <script>
-/* ===== безопасное хранилище ===== */
-var LS={
-  get:function(k,def){try{var s=localStorage.getItem(k);if(s==null)return def;var v=JSON.parse(s);return (v===null||v===undefined)?def:v;}catch(e){return def;}},
-  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){toast('Не удалось сохранить: память браузера переполнена');return false;}}
-};
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function fmt(n){var v=Math.round(n*100)/100;return v.toFixed(2).replace('.',',')+' ₽';}
-function fmt2(n){var v=Math.round(n*100)/100;return v.toFixed(2).replace('.',',');}
-function fmtDate(iso){var d=iso?new Date(iso):new Date();function p(x){return (x<10?'0':'')+x;}return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes());}
-var toastTimer=null;
-function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.className='show';clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.className='';},2600);}
+(function(){
+'use strict';
 
-/* ===== каталог ===== */
-var ALL=[];
-if(window.CATALOG&&CATALOG.groups){
-  if(CATALOG.note){document.getElementById('noteLine').textContent=CATALOG.note;}
-  for(var gi=0;gi<CATALOG.groups.length;gi++){
-    var g=CATALOG.groups[gi];
-    for(var ii=0;ii<g.items.length;ii++){
-      var it=g.items[ii];
-      ALL.push({id:it[2],n:it[0],p:it[1],g:g.name});
+// ---------- безопасное хранилище ----------
+function getLS(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}}
+function setLS(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
+
+// ---------- нормализация каталога: массивы [название,цена,id] и объекты {n,p,id} ----------
+var ALL=[],INDEX={};
+try{
+  var src=(typeof CATALOG!=='undefined'&&CATALOG&&CATALOG.groups)?CATALOG.groups:[];
+  src.forEach(function(g){
+    var gname=g.name||g.n||'';
+    var items=[];
+    (g.items||[]).forEach(function(it){
+      var o=null;
+      if(Array.isArray(it)){o={id:String(it[2]||''),n:String(it[0]||''),p:Number(it[1])||0};}
+      else if(it&&typeof it==='object'){o={id:String(it.id||''),n:String(it.n||it.name||''),p:Number(it.p!=null?it.p:(it.price!=null?it.price:0))||0};}
+      if(o&&o.n){if(!o.id)o.id='x'+Math.random().toString(36).slice(2,10);items.push(o);}
+    });
+    if(items.length){ALL.push({name:gname,items:items});items.forEach(function(it){INDEX[it.id]=it;});}
+  });
+}catch(e){ALL=[];}
+document.getElementById('hdrNote').textContent=(typeof CATALOG!=='undefined'&&CATALOG&&CATALOG.note)?CATALOG.note:'Цены оптовые, без НДС, с доставкой';
+
+// ---------- утилиты ----------
+function fmt(n){return (isFinite(n)?n:0).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(ts){if(!ts)return 'дата неизвестна';var d=new Date(ts);if(isNaN(d.getTime()))return 'дата неизвестна';function p(x){return (x<10?'0':'')+x;}return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes());}
+function sumItems(items){var s=0;(items||[]).forEach(function(i){s+=(Number(i.p)||0)*(Number(i.q)||0);});return Math.round(s*100)/100;}
+function allKeys(){var ks=[];try{for(var i=0;i<localStorage.length;i++)ks.push(localStorage.key(i));}catch(e){}return ks;}
+
+// ---------- настройки накладной ----------
+var SKEY='inv_settings_v8';
+function loadSettings(){var s=getLS(SKEY,{sup:'',fio:'',nextNum:35159});if(typeof s.nextNum!=='number'||!isFinite(s.nextNum))s.nextNum=35159;return s;}
+var SET=loadSettings();
+function saveSettingsNow(){setLS(SKEY,SET);}
+
+// ---------- нормализация заявок ----------
+function normItems(list){
+  var out=[];
+  (list||[]).forEach(function(it){
+    if(!it)return;
+    var o=null;
+    if(Array.isArray(it)){
+      o={id:String(it[2]||''),n:String(it[0]||''),p:Number(it[1])||0,q:1};
+      if(typeof it[2]==='number'&&isFinite(it[2])){o.q=it[2]||1;o.id=String(it[3]||'');}
+      else if(it.length>=4&&typeof it[3]==='number'){o.q=it[3]||1;}
+    } else if(typeof it==='object'){
+      o={id:String(it.id||''),n:String(it.n||it.name||it.title||''),p:Number(it.p!=null?it.p:(it.price!=null?it.price:0))||0,
+         q:Number(it.q!=null?it.q:(it.qty!=null?it.qty:(it.count!=null?it.count:(it.quantity!=null?it.quantity:1))))||1};
     }
-  }
+    if(!o)return;
+    if(!o.n&&o.id&&INDEX[o.id])o.n=INDEX[o.id].n;
+    if(!o.p&&o.id&&INDEX[o.id])o.p=INDEX[o.id].p;
+    if(o.n){if(!o.id)o.id='x'+Math.random().toString(36).slice(2,10);out.push(o);}
+  });
+  return out;
 }
-
-/* ===== корзина ===== */
-var cart=LS.get('cart',{});if(typeof cart!=='object'||cart===null||Array.isArray(cart))cart={};
-function cartQty(){var s=0;for(var k in cart)s+=cart[k];return s;}
-function cartSum(){var s=0;for(var k in cart){var p=findProd(k);if(p)s+=p.p*cart[k];}return s;}
-function findProd(id){for(var i=0;i<ALL.length;i++)if(ALL[i].id===id)return ALL[i];return null;}
-function saveCart(){LS.set('cart',cart);updateCounts();}
-function addToCart(id,qty){if(!qty||qty<=0)qty=1;cart[id]=(cart[id]||0)+qty;saveCart();toast('Добавлено в корзину');}
-function updateCounts(){
-  var cq=cartQty();var cc=document.getElementById('cartCount');
-  cc.style.display=cq>0?'inline':'none';cc.textContent=cq;
-  var pending=0;for(var i=0;i<orders.length;i++)if(orders[i].status!=='done')pending++;
-  var oc=document.getElementById('ordersCount');oc.style.display=pending>0?'inline':'none';oc.textContent=pending;
-}
-
-/* ===== заявки: единое хранилище с миграцией ===== */
-var ORDERS_KEY='orders_v8';
 function normOrder(o){
   if(!o||typeof o!=='object')return null;
-  var items=o.items||o.rows;if(!items||!items.length)return null;
-  var rows=[];
-  for(var i=0;i<items.length;i++){
-    var it=items[i];if(!it)continue;
-    var n=it.n||it.name||it['Товар']||'';var p=Number(it.p!==undefined?it.p:(it.price!==undefined?it.price:0));
-    var q=Number(it.qty!==undefined?it.qty:(it.q!==undefined?it.q:(it.count||0)));
-    if(!n||!q)continue;rows.push({id:it.id||'',n:n,p:p,qty:q});
-  }
-  if(!rows.length)return null;
-  var cust=o.customer||{};var created=o.created||o.createdAt||o.date||new Date().toISOString();
-  var st=o.status||'pending';if(st!=='done')st='pending';
-  return {id:o.id||('o'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36)),
-          num:o.num||o.invoiceNum||0,status:st,created:created,
-          customer:{name:cust.name||o.name||'',phone:cust.phone||o.phone||'',comment:cust.comment||o.comment||''},
-          items:rows};
+  if(!Array.isArray(o)&&typeof o==='object'&&!o.items&&!o.cart&&!o.positions&&!o.num&&!o.phone){return null;}
+  var items=normItems(o.items||o.cart||o.positions||o.lines||[]);
+  var ts=Number(o.ts)||0;
+  if(!ts&&o.date){var d=new Date(o.date);if(!isNaN(d.getTime()))ts=d.getTime();}
+  if(!ts&&o.createdAt){var d2=new Date(o.createdAt);if(!isNaN(d2.getTime()))ts=d2.getTime();}
+  if(!items.length&&!o.phone&&!o.name)return null;
+  return {num:String(o.num||o.number||o.inv||('З'+Date.now()%100000)),ts:ts||null,
+    status:(o.status==='done'||o.status==='completed'||o.done)?'done':'pending',
+    name:String(o.name||o.customer||''),phone:String(o.phone||''),comment:String(o.comment||''),
+    items:items,total:Number(o.total)||sumItems(items)};
 }
 function loadOrders(){
-  var list=LS.get(ORDERS_KEY,null);
-  if(list&&Array.isArray(list))return list;
-  var migrated=[];
-  var candidates=['all_orders','orders','orders_list','saved_requests'];
-  for(var ci=0;ci<candidates.length;ci++){
-    var v=LS.get(candidates[ci],null);
-    if(v&&Array.isArray(v)){for(var i=0;i<v.length;i++){var n=normOrder(v[i]);if(n)migrated.push(n);}}
-  }
-  try{
-    for(var j=0;j<localStorage.length;j++){
-      var k=localStorage.key(j);
-      if(k&&k.indexOf('order')===0&&k!==ORDERS_KEY&&candidates.indexOf(k)<0){
-        var raw=null;try{raw=JSON.parse(localStorage.getItem(k));}catch(e){raw=null;}
-        if(raw&&!Array.isArray(raw)){var n2=normOrder(raw);if(n2)migrated.push(n2);}
-      }
+  var o=getLS('orders_v8',null);
+  if(Array.isArray(o)){return o.map(normOrder).filter(Boolean);}
+  var res=[];
+  allKeys().forEach(function(k){
+    if(/order/i.test(k)){
+      var v=getLS(k,null);
+      if(Array.isArray(v)){v.forEach(function(x){var n=normOrder(x);if(n)res.push(n);});}
+      else if(v&&typeof v==='object'){Object.keys(v).forEach(function(id){var n=normOrder(v[id]);if(n)res.push(n);});}
     }
-  }catch(e){}
-  LS.set(ORDERS_KEY,migrated);
-  return migrated;
-}
-var orders=loadOrders();
-function saveOrders(){LS.set(ORDERS_KEY,orders);updateCounts();}
-
-var invSettings=LS.get('inv_settings',{supplier:'',fio:'',nextNum:1});
-function saveInvSettings(){LS.set('inv_settings',invSettings);}
-
-/* ===== фильтры и список товаров ===== */
-var PAGE=30,shown=0,currentList=[];
-var catSelect=document.getElementById('catSelect'),search=document.getElementById('search');
-for(var gi2=0;gi2<CATALOG.groups.length;gi2++){
-  var op=document.createElement('option');op.value=CATALOG.groups[gi2].name;op.textContent=CATALOG.groups[gi2].name;catSelect.appendChild(op);
-}
-function applyFilters(){
-  var q=search.value.trim().toLowerCase(),cat=catSelect.value;
-  currentList=[];shown=0;
-  for(var i=0;i<ALL.length;i++){
-    var it=ALL[i];
-    if(cat&&it.g!==cat)continue;
-    if(q&&it.n.toLowerCase().indexOf(q)<0)continue;
-    currentList.push(it);
-  }
-  var lst=document.getElementById('productList');lst.innerHTML='';
-  document.getElementById('emptyMsg').hidden=currentList.length>0;
-  renderMore();
-}
-function renderMore(){
-  var lst=document.getElementById('productList');
-  var end=Math.min(shown+PAGE,currentList.length);
-  var html='';
-  for(var i=shown;i<end;i++){
-    var it=currentList[i];
-    html+='<div class="prod" data-id="'+esc(it.id)+'">'
-      +'<div class="info"><div class="name">'+esc(it.n)+'</div><div class="price">'+fmt(it.p)+'</div><div class="grp">'+esc(it.g)+'</div></div>'
-      +'<input class="qty" type="number" min="0" step="0.01" value="1">'
-      +'<button class="add">В корзину</button></div>';
-  }
-  shown=end;lst.insertAdjacentHTML('beforeend',html);
-  document.getElementById('sentinel').style.display=shown<currentList.length?'block':'none';
-  document.getElementById('emptyMsg').hidden=currentList.length>0;
-}
-document.getElementById('productList').addEventListener('click',function(e){
-  var b=e.target.closest?e.target.closest('.add'):null;
-  if(!b)return;
-  var row=b.parentNode;var id=row.getAttribute('data-id');
-  var q=parseFloat(row.querySelector('.qty').value);if(!q||q<=0)q=1;
-  addToCart(id,q);
-});
-if('IntersectionObserver' in window){
-  var io=new IntersectionObserver(function(en){if(en[0].isIntersecting)renderMore();},{rootMargin:'200px'});
-  io.observe(document.getElementById('sentinel'));
-}else{
-  window.addEventListener('scroll',function(){
-    if(window.innerHeight+window.scrollY>=document.body.offsetHeight-300)renderMore();
   });
+  if(res.length){setLS('orders_v8',res);}
+  return res;
 }
-search.addEventListener('input',applyFilters);
-catSelect.addEventListener('change',applyFilters);
-document.getElementById('btnReset').addEventListener('click',function(){search.value='';catSelect.value='';applyFilters();});
+var ORDERS=loadOrders();
 
-/* ===== модальные окна ===== */
-function openSheet(id,ovId){document.getElementById(ovId).classList.add('open');document.getElementById(id).classList.add('open');}
-function closeSheet(id,ovId){document.getElementById(id).classList.remove('open');document.getElementById(ovId).classList.remove('open');}
-var CLOSE_MAP={'shCart':'ovCart','shCheckout':'ovCheckout','shOrders':'ovOrders','shInvoice':'ovInvoice','shInvSettings':'ovInvSettings'};
-document.addEventListener('click',function(e){
-  var b=e.target.closest?e.target.closest('[data-close]'):null;
-  if(!b)return;var pair=CLOSE_MAP[b.getAttribute('data-close')];if(pair)closeSheet(b.getAttribute('data-close'),pair);
-});
-for(var ovk in {'ovCart':1,'ovCheckout':1,'ovOrders':1,'ovInvoice':1,'ovInvSettings':1}){}
-document.getElementById('ovCart').addEventListener('click',function(){closeSheet('shCart','ovCart');});
-document.getElementById('ovCheckout').addEventListener('click',function(){closeSheet('shCheckout','ovCheckout');});
-document.getElementById('ovOrders').addEventListener('click',function(){closeSheet('shOrders','ovOrders');});
-document.getElementById('ovInvoice').addEventListener('click',function(){closeSheet('shInvoice','ovInvoice');});
-document.getElementById('ovInvSettings').addEventListener('click',function(){closeSheet('shInvSettings','ovInvSettings');});
-
-/* ===== корзина: отрисовка ===== */
-document.getElementById('btnCart').addEventListener('click',function(){renderCart();openSheet('shCart','ovCart');});
-function renderCart(){
-  var body=document.getElementById('cartBody');
-  var keys=[];for(var k in cart)keys.push(k);
-  if(!keys.length){body.innerHTML='<div style="padding:16px;text-align:center;color:#8a93a0">Корзина пуста</div>';}
-  else{
-    var html='';
-    for(var i=0;i<keys.length;i++){
-      var p=findProd(keys[i]);if(!p){continue;}
-      html+='<div class="row"><div class="nm">'+esc(p.n)+'<div style="color:#8a93a0;font-size:12px">'+fmt(p.p)+' × '+cart[p.id]+'</div></div>'
-        +'<input class="qty" data-cid="'+esc(p.id)+'" type="number" min="0" step="0.01" value="'+cart[p.id]+'">'
-        +'<button class="rmv" data-rm="'+esc(p.id)+'" style="background:#fdecec;color:#b3261e;border:none;border-radius:8px;padding:7px 9px;cursor:pointer">✕</button></div>';
+// ---------- корзина ----------
+function loadCart(){
+  var c=getLS('cart_v8',null);
+  if(c&&typeof c==='object'&&!Array.isArray(c)){var ok={};for(var id in c){var q=Number(c[id]);if(isFinite(q)&&q>0)ok[id]=q;}return ok;}
+  var m={};
+  allKeys().forEach(function(k){
+    if(/cart/i.test(k)){
+      var v=getLS(k,null);
+      if(Array.isArray(v)){v.forEach(function(x){if(x&&x.id&&x.q)m[String(x.id)]=Number(x.q)||1;});}
+      else if(v&&typeof v==='object'){for(var id in v){var q2=Number(v[id]);if(isFinite(q2)&&q2>0)m[id]=q2;}}
     }
-    body.innerHTML=html;
-  }
-  document.getElementById('cartTotal').textContent=fmt(cartSum());
-  document.getElementById('checkoutTotal').textContent=fmt(cartSum());
+  });
+  if(Object.keys(m).length){setLS('cart_v8',m);}
+  return m;
 }
-document.getElementById('cartBody').addEventListener('input',function(e){
-  var t=e.target;if(!t.getAttribute||!t.getAttribute('data-cid'))return;
-  var id=t.getAttribute('data-cid');var v=parseFloat(t.value);
-  if(v>0){cart[id]=v;saveCart();}else if(v===0){delete cart[id];}
-  document.getElementById('cartTotal').textContent=fmt(cartSum());
-  document.getElementById('checkoutTotal').textContent=fmt(cartSum());
-});
-document.getElementById('cartBody').addEventListener('click',function(e){
-  var b=e.target.closest?e.target.closest('[data-rm]'):null;if(!b)return;
-  delete cart[b.getAttribute('data-rm')];saveCart();renderCart();
-});
-document.getElementById('btnClearCart').addEventListener('click',function(){
-  if(!confirm('Очистить корзину?'))return;cart={};saveCart();renderCart();toast('Корзина очищена');
-});
+var CART=loadCart();
 
-/* ===== оформление заказа ===== */
-document.getElementById('btnCheckout').addEventListener('click',function(){
-  if(!cartQty()){toast('Корзина пуста');return;}
-  closeSheet('shCart','ovCart');openSheet('shCheckout','ovCheckout');
-});
-document.getElementById('btnSaveOrder').addEventListener('click',function(){
-  var name=document.getElementById('cusName').value.trim();
-  var phone=document.getElementById('cusPhone').value.trim();
-  var comment=document.getElementById('cusComment').value.trim();
-  var ok=true;
-  document.getElementById('errName').style.display=name?'none':'block';
-  var digits=(phone.replace(/[^0-9]/g,''));
-  document.getElementById('errPhone').style.display=(digits.length>=10)?'none':'block';
-  if(!name||digits.length<10){return;}
-  var items=[];
-  for(var k in cart){var p=findProd(k);if(p&&cart[k]>0)items.push({id:p.id,n:p.n,p:p.p,qty:cart[k]});}
-  if(!items.length){toast('Корзина пуста');return;}
-  var order={id:'o'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36),
-    num:invSettings.nextNum||1,status:'pending',created:new Date().toISOString(),
-    customer:{name:name,phone:phone,comment:comment},items:items};
-  orders.push(order);
-  invSettings.nextNum=(invSettings.nextNum||1)+1;
-  var ok1=saveOrders();saveInvSettings();
-  if(!ok1){toast('Заявка не сохранена — освободите место в памяти браузера');return;}
-  cart={};saveCart();
-  document.getElementById('cusName').value='';document.getElementById('cusPhone').value='';document.getElementById('cusComment').value='';
-  closeSheet('shCheckout','ovCheckout');
-  updateCounts();renderOrders();
-  openInvoice(order);
-  toast('Заявка №'+order.num+' сохранена');
-});
+// ---------- каталог: рендер ----------
+var catSel=document.getElementById('catSel');
+ALL.forEach(function(g){var op=document.createElement('option');op.value=g.name;op.textContent=g.name;catSel.appendChild(op);});
+var search=document.getElementById('search');
+var PAGE=30,shown=PAGE,filtered=[];
 
-/* ===== заявки: список и фильтры ===== */
-var orderFilter='all';
-var filterWrap=document.querySelector('.filters');
-filterWrap.addEventListener('click',function(e){
-  var b=e.target.closest?e.target.closest('button'):null;if(!b)return;
-  orderFilter=b.getAttribute('data-f');
-  var btns=filterWrap.querySelectorAll('button');
-  for(var i=0;i<btns.length;i++)btns[i].className=(btns[i]===b)?'active':'';
-  renderOrders();
-});
-document.getElementById('btnOrders').addEventListener('click',function(){renderOrders();openSheet('shOrders','ovOrders');});
-function renderOrders(){
-  var body=document.getElementById('ordersBody');var html='';
-  var list=orders.slice().sort(function(a,b){return (b.created||'').localeCompare(a.created||'');});
-  var cnt=0;
-  for(var i=0;i<list.length;i++){
-    var o=list[i];
-    if(orderFilter==='pending'&&o.status==='done')continue;
-    if(orderFilter==='done'&&o.status!=='done')continue;
-    cnt++;
-    var sum=0;for(var j=0;j<o.items.length;j++)sum+=o.items[j].p*o.items[j].qty;
-    var badge=o.status==='done'?'<span class="badge done">Выполненная</span>':'<span class="badge pending">Необработанная</span>';
-    html+='<div class="order-card" data-oid="'+esc(o.id)+'">'
-      +'<div class="top"><span class="num">№ '+esc(o.num||'—')+' · '+fmtDate(o.created)+'</span>'+badge+'</div>'
-      +'<div class="meta">'+esc(o.customer.name||'')+(o.customer.phone?' · '+esc(o.customer.phone):'')+' · позиций: '+o.items.length+' · '+fmt(sum)+'</div>'
-      +'<div class="actions">'
-      +'<button class="act-open">📄 Накладная</button>'
-      +'<button class="act-status">'+(o.status==='done'?'↩ Вернуть в работу':'✔ Выполнена')+'</button>'
-      +'<button class="act-del">🗑 Удалить</button>'
-      +'</div></div>';
-  }
-  if(!cnt)html='<div style="padding:16px;text-align:center;color:#8a93a0">'+
-    (orderFilter==='all'?'Заявок пока нет':(orderFilter==='pending'?'Необработанных заявок нет':'Выполненных заявок нет'))+'</div>';
-  body.innerHTML=html;
-}
-document.getElementById('ordersBody').addEventListener('click',function(e){
-  var card=e.target.closest?e.target.closest('.order-card'):null;if(!card)return;
-  var id=card.getAttribute('data-oid');var order=null;
-  for(var i=0;i<orders.length;i++)if(orders[i].id===id)order=orders[i];
-  if(!order){toast('Заявка не найдена');renderOrders();return;}
-  var cls=e.target.className||'';
-  if(cls.indexOf('act-status')>=0){
-    order.status=(order.status==='done')?'pending':'done';saveOrders();renderOrders();toast('Статус обновлён');return;
-  }
-  if(cls.indexOf('act-del')>=0){
-    if(!confirm('Удалить заявку №'+(order.num||'')+'?'))return;
-    var idx=orders.indexOf(order);if(idx>=0)orders.splice(idx,1);
-    saveOrders();renderOrders();toast('Заявка удалена');return;
-  }
-  if(cls.indexOf('act-open')>=0||e.target.closest('.num')){
-    closeSheet('shOrders','ovOrders');openInvoice(order);return;
-  }
-});
-
-/* ===== накладная ===== */
-var INV={orderId:null,rows:[],buyer:''};
-function openInvoice(order){
-  INV.orderId=order?order.id:null;
-  INV.rows=[];
-  if(order){for(var i=0;i<order.items.length;i++)INV.rows.push({id:order.items[i].id,n:order.items[i].n,p:order.items[i].p,qty:order.items[i].qty});}
-  document.getElementById('invNum').value=order&&order.num?order.num:'';
-  var d=new Date();function p2(x){return (x<10?'0':'')+x;}
-  document.getElementById('invDate').value=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
-  document.getElementById('invSupplier').value=invSettings.supplier||'';
-  document.getElementById('invBuyer').value=order?((order.customer.name||'')+(order.customer.phone?', тел. '+order.customer.phone:'')):'';
-  document.getElementById('invFrom').value=invSettings.fio||'';
-  renderInvoiceRows();
-  openSheet('shInvoice','ovInvoice');
-}
-function renderInvoiceRows(){
-  var tb=document.getElementById('invRows');var html='';var total=0;
-  for(var i=0;i<INV.rows.length;i++){
-    var r=INV.rows[i];var s=r.p*r.qty;total+=s;
-    html+='<tr><td>'+(i+1)+'</td><td class="tl">'+esc(r.n)+'</td>'
-      +'<td><input type="number" min="0" step="0.01" data-irow="'+i+'" value="'+r.qty+'"></td>'
-      +'<td>шт</td><td>'+fmt2(r.p)+'</td><td>'+fmt2(s)+'</td></tr>';
-  }
-  tb.innerHTML=html;
-  document.getElementById('invTotal').textContent=fmt2(total);
-  document.getElementById('invFoot').textContent='Всего наименований '+INV.rows.length+', на сумму '+fmt2(total)+' руб.';
-}
-document.getElementById('invRows').addEventListener('input',function(e){
-  var t=e.target;if(!t.getAttribute||t.getAttribute('data-irow')===null)return;
-  var i=parseInt(t.getAttribute('data-irow'),10);var v=parseFloat(t.value);
-  if(!isNaN(v)&&v>=0&&INV.rows[i]){INV.rows[i].qty=v;renderInvoiceRows();
-    var inp=document.querySelector('[data-irow="'+i+'"]');if(inp)inp.focus();}
-});
-function invoiceText(){
-  var total=0;var lines=[];
-  lines.push('НАКЛАДНАЯ № '+(document.getElementById('invNum').value||'')+' от '+(document.getElementById('invDate').value||''));
-  lines.push('Поставщик: '+(document.getElementById('invSupplier').value||''));
-  lines.push('Покупатель: '+(document.getElementById('invBuyer').value||''));
-  lines.push('№ | Товар | Кол-во | Ед. | Цена | Сумма');
-  for(var i=0;i<INV.rows.length;i++){
-    var r=INV.rows[i];total+=r.p*r.qty;
-    lines.push((i+1)+' | '+r.n+' | '+r.qty+' | шт | '+fmt2(r.p)+' | '+fmt2(r.p*r.qty));
-  }
-  lines.push('Итого: '+fmt2(total)+' (в том числе НДС: 0,00)');
-  lines.push('Отпустил: '+(document.getElementById('invFrom').value||'')+'    Получил: '+(document.getElementById('invTo').value||''));
-  return lines.join('\n');
-}
-document.getElementById('btnPrint').addEventListener('click',function(){window.print();});
-document.getElementById('btnCsv').addEventListener('click',function(){
-  var total=0;var lines=[];
-  lines.push('Номер;Дата;Поставщик;Покупатель');
-  lines.push((document.getElementById('invNum').value||'')+';'+(document.getElementById('invDate').value||'')+';'+(document.getElementById('invSupplier').value||'')+';'+(document.getElementById('invBuyer').value||''));
-  lines.push('№;Товар;Количество;Ед;Цена;Сумма');
-  for(var i=0;i<INV.rows.length;i++){
-    var r=INV.rows[i];total+=r.p*r.qty;
-    lines.push((i+1)+';"'+r.n.replace(/"/g,'""')+'";'+r.qty+';шт;'+fmt2(r.p).replace(',','.')+';'+fmt2(r.p*r.qty).replace(',','.'));
-  }
-  lines.push('Итого;;;;;'+fmt2(total).replace(',','.'));
-  var blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='nakladnaya_'+(document.getElementById('invNum').value||INV.orderId||'export')+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  toast('CSV скачан');
-});
-document.getElementById('btnCopy').addEventListener('click',function(){
-  var text=invoiceText();
-  function fb(){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Скопировано');}catch(e){toast('Не удалось скопировать');}document.body.removeChild(ta);}
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){toast('Скопировано');},fb);}else{fb();}
-});
-document.getElementById('btnInvSettings').addEventListener('click',function(){
-  document.getElementById('setSupplier').value=invSettings.supplier||'';
-  document.getElementById('setFio').value=invSettings.fio||'';
-  document.getElementById('setNextNum').value=invSettings.nextNum||1;
-  openSheet('shInvSettings','ovInvSettings');
-});
-document.getElementById('btnSaveSettings').addEventListener('click',function(){
-  invSettings.supplier=document.getElementById('setSupplier').value.trim();
-  invSettings.fio=document.getElementById('setFio').value.trim();
-  var nn=parseInt(document.getElementById('setNextNum').value,10);
-  invSettings.nextNum=(isNaN(nn)||nn<1)?1:nn;
-  saveInvSettings();toast('Настройки сохранены');
-  closeSheet('shInvSettings','ovInvSettings');
-  document.getElementById('invSupplier').value=invSettings.supplier||'';
-  document.getElementById('invFrom').value=invSettings.fio||'';
-});
-
-/* ===== установка PWA ===== */
-var deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',function(e){
-  e.preventDefault();deferredPrompt=e;
-  document.getElementById('btnInstall').hidden=false;
-});
-document.getElementById('btnInstall').addEventListener('click',function(){
-  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;this.hidden=true;}
-});
-(function(){
-  var ua=navigator.userAgent||'';var isIOS=/iPhone|iPad|iPod/.test(ua);
-  var isStandalone=window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches;
-  if(isIOS&&!isStandalone){
-    var w=document.getElementById('installWrap');
-    w.insertAdjacentHTML('beforeend','<div class="note">На iPhone: кнопка «Поделиться» → «На экран “Домой”».</div>');
-  }
-  var isMi=/MiuiBrowser|MiBrowser|MIB/i.test(ua);
-  var isVK=/VK[a-zA-Z]{1,4};|vkua|VKMobile/i.test(ua);
-  var isWV=/;\s*wv\)/i.test(ua);
-  if(isMi||isVK||isWV){
-    var h=document.getElementById('browserHint');h.hidden=false;
-    h.innerHTML='⚠ Вы открыли каталог во встроенном браузере. Для установки на телефон и стабильной работы заявок откройте ссылку в Chrome.<br><button id="hintCopy">Скопировать ссылку</button>';
-    document.getElementById('hintCopy').addEventListener('click',function(){
-      var url=location.href.split('#')[0];
-      function fb(){var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Ссылка скопирована');}catch(e){}document.body.removeChild(ta);}
-      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){toast('Ссылка скопирована');},fb);}else{fb();}
+function renderProducts(){
+  var q=search.value.trim().toLowerCase();
+  var cat=catSel.value;
+  filtered=[];
+  ALL.forEach(function(g){
+    if(cat!=='all'&&g.name!==cat)return;
+    g.items.forEach(function(it){
+      if(q&&it.n.toLowerCase().indexOf(q)<0)return;
+      filtered.push({it:it,grp:g.name});
     });
-  }
-})();
-
-/* ===== запуск ===== */
-updateCounts();applyFilters();
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').catch(function(e){/* офлайн-режим недоступен, работа продолжится */});
+  });
+  shown=PAGE;
+  drawList();
 }
+function drawList(){
+  var html='';
+  for(var i=0;i<Math.min(shown,filtered.length);i++){
+    var e=filtered[i],it=e.it;
+    html+='<div class="card"><div class="info"><div class="name">'+esc(it.n)+'</div><div class="grp">'+esc(e.grp)+'</div><div class="price">'+fmt(it.p)+' ₽</div></div>'
+      +'<input class="qty" type="number" min="1" value="1" id="qty_'+i+'">'
+      +'<button class="add" onclick="addToCart(\''+it.id+'\','+i+')">В корзину</button></div>';
+  }
+  document.getElementById('list').innerHTML=html||'<div style="padding:24px;text-align:center;color:#7b8794">Ничего не найдено.<br>Попробуйте изменить запрос или категорию.</div>';
+  var more=document.getElementById('moreBtn');
+  more.style.display=(shown<filtered.length)?'block':'none';
+  document.getElementById('pageFoot').textContent=filtered.length?('Товаров: '+filtered.length+' из '+ALL.reduce(function(s,g){return s+g.items.length;},0)):'';
+}
+function moreItems(){shown+=PAGE;drawList();}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+catSel.addEventListener('change',renderProducts);
+search.addEventListener('input',renderProducts);
+
+// ---------- корзина: логика ----------
+window.addToCart=function(id,i){
+  var el=document.getElementById('qty_'+i);
+  var q=Math.max(1,parseInt(el&&el.value,10)||1);
+  CART[id]=(CART[id]||0)+q;
+  setLS('cart_v8',CART);
+  updateBadges();
+};
+function cartList(){return Object.keys(CART).map(function(id){var it=INDEX[id]||{};return {id:id,n:it.n||'Товар',p:it.p||0,q:CART[id]};});}
+function updateBadges(){
+  var n=0;for(var id in CART)n+=CART[id];
+  var cb=document.getElementById('cartBadge');
+  if(n>0){cb.style.display='inline-block';cb.textContent=n;}else{cb.style.display='none';}
+  var p=ORDERS.filter(function(o){return o.status==='pending';}).length;
+  var ob=document.getElementById('ordBadge');
+  if(p>0){ob.style.display='inline-block';ob.textContent=p;}else{ob.style.display='none';}
+}
+
+// ---------- модальные окна ----------
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+window.openCart=function(){
+  var body=document.getElementById('cartBody');
+  var list=cartList();
+  if(!list.length){body.innerHTML='<div style="padding:16px;color:#7b8794;text-align:center">Корзина пуста</div>';}
+  else{
+    body.innerHTML=list.map(function(x,i){
+      return '<div class="row"><div class="nm">'+esc(x.n)+'</div>'
+      +'<button class="btn" onclick="cartMinus('+i+')">−</button>'
+      +'<input class="qty" type="number" min="1" value="'+x.q+'" onchange="cartSet('+i+',this.value)">'
+      +'<button class="btn" onclick="cartPlus('+i+')">+</button>'
+      +'<span class="pr">'+fmt(x.p*x.q)+' ₽</span></div>';
+    }).join('');
+  }
+  document.getElementById('cartTotal').textContent='Итого: '+fmt(sumItems(list))+' ₽';
+  openModal('cartModal');
+};
+function cartItem(i){return cartList()[i];}
+window.cartPlus=function(i){var x=cartItem(i);CART[x.id]=x.q+1;setLS('cart_v8',CART);openCart();updateBadges();};
+window.cartMinus=function(i){var x=cartItem(i);if(x.q>1){CART[x.id]=x.q-1;}else{delete CART[x.id];}setLS('cart_v8',CART);openCart();updateBadges();};
+window.cartSet=function(i,v){var x=cartItem(i);var q=Math.max(1,parseInt(v,10)||1);CART[x.id]=q;setLS('cart_v8',CART);openCart();updateBadges();};
+window.clearCart=function(){CART={};setLS('cart_v8',CART);openCart();updateBadges();};
+
+window.openOrderForm=function(){
+  var list=cartList();
+  if(!list.length)return;
+  document.getElementById('ofName').value=SET.lastName||'';
+  document.getElementById('ofPhone').value='';
+  document.getElementById('ofComment').value='';
+  document.getElementById('ofErr').style.display='none';
+  document.getElementById('ofTotal').textContent='Сумма заказа: '+fmt(sumItems(list))+' ₽';
+  closeModal('cartModal');
+  openModal('orderModal');
+};
+window.saveOrder=function(){
+  var name=document.getElementById('ofName').value.trim();
+  var phone=document.getElementById('ofPhone').value.replace(/\D/g,'');
+  var comment=document.getElementById('ofComment').value.trim();
+  var err=document.getElementById('ofErr');
+  if(!name){err.textContent='Укажите имя или название организации';err.style.display='block';return;}
+  if(phone.length<10){err.textContent='Укажите телефон (не менее 10 цифр)';err.style.display='block';return;}
+  SET.lastName=name;saveSettingsNow();
+  var order={num:String(SET.nextNum),ts:Date.now(),status:'pending',name:name,phone:phone,comment:comment,
+    items:cartList(),total:sumItems(cartList())};
+  SET.nextNum++;saveSettingsNow();
+  ORDERS.unshift(order);setLS('orders_v8',ORDERS);
+  CART={};setLS('cart_v8',CART);updateBadges();
+  closeModal('orderModal');
+  openInvoice(order);
+};
+
+// ---------- заявки ----------
+var ordFilter='all';
+window.setOrdFilter=function(f){
+  ordFilter=f;
+  document.getElementById('chAll').classList.toggle('on',f==='all');
+  document.getElementById('chPend').classList.toggle('on',f==='pending');
+  document.getElementById('chDone').classList.toggle('on',f==='done');
+  drawOrders();
+};
+window.openOrders=function(){drawOrders();openModal('ordersModal');};
+function drawOrders(){
+  var list=ORDERS.filter(function(o){return ordFilter==='all'||o.status===ordFilter;});
+  var body=document.getElementById('ordersBody');
+  if(!list.length){body.innerHTML='<div style="padding:16px;color:#7b8794;text-align:center">Заявок нет</div>';return;}
+  body.innerHTML=list.map(function(o,i){
+    var done=o.status==='done';
+    return '<div class="ord"><div class="t">№ '+esc(o.num)+' · '+fmtDate(o.ts)+'</div>'
+    +'<div class="m">'+(o.name?esc(o.name)+' · ':'')+(o.phone?esc(o.phone)+' · ':'')+'позиций: '+o.items.length+' · '+fmt(o.total)+' ₽</div>'
+    +'<div class="acts">'
+    +'<button class="btn" onclick="openInvoice(ORDERS.indexOf(ORDERS.filter(function(x){return x.num===\''+esc(o.num)+'\';})[0]))">📄 Накладная</button>'
+    +'<button class="btn" onclick="toggleOrder(\''+esc(o.num)+'\')">'+(done?'↩ Вернуть в работу':'✔ Выполнена')+'</button>'
+    +'<button class="btn danger" onclick="delOrder(\''+esc(o.num)+'\')">🗑 Удалить</button>'
+    +'</div></div>';
+  }).join('');
+}
+function findOrder(num){for(var i=0;i<ORDERS.length;i++)if(String(ORDERS[i].num)===String(num))return ORDERS[i];return null;}
+window.toggleOrder=function(num){var o=findOrder(num);if(!o)return;o.status=(o.status==='done')?'pending':'done';setLS('orders_v8',ORDERS);drawOrders();updateBadges();};
+window.delOrder=function(num){if(!confirm('Удалить заявку № '+num+'?'))return;ORDERS=ORDERS.filter(function(o){return String(o.num)!==String(num);});setLS('orders_v8',ORDERS);drawOrders();updateBadges();};
+
+// ---------- накладная ----------
+var INV={num:'',date:'',rows:[]};
+window.openInvoice=function(o){
+  if(!o)return;
+  var d=new Date();
+  function p(x){return (x<10?'0':'')+x;}
+  INV.num=o.num||String(SET.nextNum);
+  INV.date=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+  INV.rows=(o.items||[]).map(function(x){return {n:x.n,p:x.p,q:x.q,ed:'шт'};});
+  document.getElementById('invNum').value=INV.num;
+  document.getElementById('invDate').value=INV.date;
+  document.getElementById('invSup').value=SET.sup||'';
+  document.getElementById('invBuyer').value=o.name||'';
+  document.getElementById('invFio').value=SET.fio||'';
+  closeModal('ordersModal');closeModal('cartModal');
+  drawInv();
+  openModal('invoice');
+};
+function drawInv(){
+  var html='';
+  INV.rows.forEach(function(r,i){
+    html+='<tr><td>'+(i+1)+'</td><td>'+esc(r.n)+'</td>'
+    +'<td><input type="number" min="0" step="any" value="'+r.q+'" onchange="invSetQ('+i+',this.value)"></td>'
+    +'<td><input type="text" value="'+esc(r.ed)+'" onchange="invSetEd('+i+',this.value)"></td>'
+    +'<td><input type="number" min="0" step="any" value="'+r.p+'" onchange="invSetP('+i+',this.value)"></td>'
+    +'<td class="invsum">'+fmt((Number(r.p)||0)*(Number(r.q)||0))+'</td>'
+    +'<td class="no-print"><button class="btn danger" style="padding:4px 8px" onclick="delInvRow('+i+')">×</button></td></tr>';
+  });
+  document.getElementById('invRows').innerHTML=html||'<tr><td colspan="7" style="text-align:center;color:#7b8794">Строк нет</td></tr>';
+  document.getElementById('invSum').textContent=fmt(sumItems(INV.rows));
+}
+window.invSetQ=function(i,v){INV.rows[i].q=Math.max(0,parseFloat(v)||0);redrawInvSum();};
+window.invSetP=function(i,v){INV.rows[i].p=Math.max(0,parseFloat(v)||0);redrawInvSum();};
+window.invSetEd=function(i,v){INV.rows[i].ed=v;};
+function redrawInvSum(){
+  var s=sumItems(INV.rows);
+  document.getElementById('invSum').textContent=fmt(s);
+  var sums=document.querySelectorAll('#invRows .invsum');
+  INV.rows.forEach(function(r,i){if(sums[i])sums[i].textContent=fmt((Number(r.p)||0)*(Number(r.q)||0));});
+}
+window.addInvRow=function(){INV.rows.push({n:'',p:0,q:1,ed:'шт'});drawInv();};
+window.delInvRow=function(i){INV.rows.splice(i,1);drawInv();};
+window.printInv=function(){
+  INV.num=document.getElementById('invNum').value;INV.date=document.getElementById('invDate').value;
+  SET.sup=document.getElementById('invSup').value;SET.fio=document.getElementById('invFio').value;
+  if(SET.sup)document.getElementById('invBuyer').value=document.getElementById('invBuyer').value;
+  saveSettingsNow();
+  redrawInvSum();
+  setTimeout(function(){window.print();},50);
+};
+window.csvInv=function(){
+  var sep=';';
+  var lines=['Номер'+sep+document.getElementById('invNum').value,
+    'Дата'+sep+document.getElementById('invDate').value,
+    'Поставщик'+sep+document.getElementById('invSup').value,
+    'Покупатель'+sep+document.getElementById('invBuyer').value,''];
+  lines.push(['№','Товар','Кол-во','Ед.','Цена','Сумма'].join(sep));
+  INV.rows.forEach(function(r,i){
+    lines.push([(i+1),'"'+String(r.n).replace(/"/g,'""')+'"',String(r.q).replace('.',','),r.ed,String(r.p).replace('.',','),String((Number(r.p)||0)*(Number(r.q)||0)).replace('.',',')].join(sep));
+  });
+  lines.push('Итого'+sep+String(sumItems(INV.rows)).replace('.',','));
+  var blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=windows-1251;'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='invoice_'+(INV.num||'order')+'.csv';a.click();
+};
+window.copyInv=function(){
+  var lines=['НАКЛАДНАЯ № '+(document.getElementById('invNum').value||'')+' от '+(document.getElementById('invDate').value||''),
+    'Поставщик: '+(document.getElementById('invSup').value||''),
+    'Покупатель: '+(document.getElementById('invBuyer').value||''),''];
+  INV.rows.forEach(function(r,i){lines.push((i+1)+'. '+r.n+' — '+r.q+' '+r.ed+' × '+fmt(r.p)+' = '+fmt(r.p*r.q)+' руб');});
+  lines.push('','Итого: '+fmt(sumItems(INV.rows))+' руб');
+  var text=lines.join('\n');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){alert('Скопировано');},function(){fallbackCopy(text);});}
+  else fallbackCopy(text);
+};
+function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');alert('Скопировано');}catch(e){alert('Не удалось скопировать');}document.body.removeChild(ta);}
+window.copyLink=function(){
+  var t=location.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){alert('Ссылка скопирована');},function(){fallbackCopy(t);});}
+  else fallbackCopy(t);
+};
+
+// ---------- настройки ----------
+window.saveSettings=function(){
+  SET.sup=document.getElementById('stSup').value.trim();
+  SET.fio=document.getElementById('stFio').value.trim();
+  var n=parseInt(document.getElementById('stNum').value,10);
+  if(!isFinite(n)||n<1){document.getElementById('stErr').textContent='Номер — целое число от 1';document.getElementById('stErr').style.display='block';return;}
+  SET.nextNum=n;saveSettingsNow();
+  closeModal('settings');
+};
+
+// ---------- прочее ----------
+if(/MiuiBrowser|MiBrowser|HeyTapBrowser|VivoBrowser|HeyBrowser/i.test(navigator.userAgent)){
+  document.getElementById('miBanner').style.display='flex';
+}
+if('serviceWorker' in navigator){
+  try{navigator.serviceWorker.register('sw.js').catch(function(){});}catch(e){}
+}
+updateBadges();
+renderProducts();
+})();
 </script>
 </body>
 </html>
